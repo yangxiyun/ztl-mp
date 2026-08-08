@@ -52,14 +52,14 @@
 ### ztl-symphony（执行引擎）🔧
 - **GitHub**：yangxiyun/ztl-symphony
 - **角色**：JS 编排器——驱动 Claude Code 会话执行派单：按工作区起独立会话、`--resume` 同 session 续跑省 token、`symphony: 1A 2B` 应答续跑、AGENT-RETURN v1 对齐方（`orchestrator/prompt-builder.js` 的 AGENT_RETURN_SPEC/AUTONOMY_CONTRACT）。
-- **MP 关系**：MP 定域后经 symphony 在目标仓库起执行会话（第二期 Telegram 网关的承载层）。
+- **MP 关系**：MP 定域后经 symphony 在目标仓库起执行会话。**2026-08-09 二期落地**：①`gateway/` Telegram 网关（手机发单→headless MP 定域会话→滴答「MP派工单」建卡→事件推送→reply 决策续跑，环境变量 `MP_TG_TOKEN`/`MP_TG_CHAT_ID`）；②编排器事件流 `logs/events.jsonl`；③跨工作区执行（任务描述「工作区：<代号>」+ `cfg.workspaces` 白名单，代号与本表对齐：bps/mgmt/laos-wiki/content/lao-law-lib/mp）。
 - **CLI 调用**：无 bin/npm script，运维走 `scripts\orchestrator.ps1 {start|stop|status|dry-run|check|install-autostart}`（内部为 `node orchestrator\orchestrator.js {run|status|dry-run|check}`）；真正执行体是它 spawn 的 `claude` CLI：`claude -p --output-format json --max-turns N [--model M --effort E] --allowedTools ... [--resume <sessionId>] --strict-mcp-config --add-dir Z:\10_BPS`，prompt 走 stdin（`orchestrator\orchestrator.js`）。
 - **API/可编程调用**：无独立 API server；`linear-client.js`/`dida-client.js` 是编排器内部对 Linear GraphQL / 滴答清单 v2 API 的封装，供其自身轮询用，非对外接口。
 - **会话生命周期**：每个 Linear issue 一次 claim 即 spawn 独立 claude 会话，`cwd = D:\ztl-agent-v2`；人在 issue 描述末尾粘 `symphony: 1A 2B` / `symphony: 通过/继续/<修改意见>` 触发续跑；`registry.js` 记录的 `sessionId` 存在则走 `--resume` 续跑（精简 prompt），resume 失败（session 过期等）自动回落冷启动重跑（完整任务书+断点续跑说明）。
 - **AGENT-RETURN v1**：`orchestrator\return-parser.js`（`parseAgentReturn`/`parseRunOutput`）解析 claude 最终文本尾部六段（【状态】DONE/MISSING_INPUT/GATE_CONFIRM/HUMAN_ESCALATION/ERROR 等），无此块判 `UNPARSED` 按 park 处理；协议规范权威在 `D:\ztl-agent-v2\ARCHITECTURE.md §3.5`，本仓库 `orchestrator\prompt-builder.js` 只是把契约文字嵌入 prompt 的消费方。
 
 ### ticktick-mcp（滴答清单 MCP server）🔧
-- 任务看板承载（第二期「MP 派工单」项目）。
+- 任务看板承载。**2026-08-09 已接通**：看板=symphony 控制平面清单「MP派工单」（四列 Todo/In Progress/In Review/Done + agent-* 标签），网关建卡、编排器流转，单一状态源；ticktick-mcp 仅供会话侧查看/管理，网关侧走 symphony 的 dida-client.js（同一账号同一数据）。
 
 ## ⛔ 弃用名单（2026-08-08 确认，MP 永不派单；建议 GitHub Archive 防混淆）
 
