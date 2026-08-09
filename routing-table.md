@@ -1,27 +1,42 @@
 # 全局路由表（routing-table）— 意图 → 工作区 → 入口
 
 > MP 定域用。第一列命中即派单；多列疑似命中 → 按「消歧规则」；仍不明 → 问用户。
-> 域内细路由不在本表（归各仓库编排 agent）。最后更新：2026-08-09（加模型档列；数据位置 gate 改云覆盖 gate）。
+> 域内细路由不在本表（归各仓库编排 agent）。最后更新：2026-08-09（加**派单代号**列——建卡时填代号不填仓库名）。
 
 ## 主路由表
 
-| 用户意图（触发词族） | 工作区 | 入口 | 模型档 | 备注 |
-|---|---|---|---|---|
-| 做账/loop/帮 XX 做 X 月/序时账到手 | ztl-bps-workspace | @accounting-loop-flow | H | 四要件：客户/月份/目录/卡片子集 |
-| 整理客户资料/PBC 归位/资料清单（例：整理 CRCT 2026-06 资料） | ztl-bps-workspace | @accounting-loop-flow 卡片0（或直呼 lao-pbc-file-organizer） | M | 单纯归档不做账→直呼 skill |
-| 月度报税/全套申报/交接包 | ztl-bps-workspace | @lao-tax-monthly-filing-flow | H | 税务先于会计 |
-| WHT/预扣税/02/境外付款/补税台账 | ztl-bps-workspace | @wht-filing-flow | M | 按次，不入月度节奏 |
-| 单独月结/关账/月底分录/期末调汇 | ztl-bps-workspace | @lao-month-end-close | M | 与 loop 卡片3 二选一 |
-| 复核 TB/报表/底稿；复核申报表；文档预审/泛化把关 | ztl-bps-workspace | @qc-review-accounting-flow / @qc-review-tax-flow / @qc-review-flow | H | 只审不改，判断密集 |
-| 开票/应收/催款/核销/计算表复核 | ztl-bps-workspace | @ztl-ar | M | |
-| 单点：录进项/销项、算个税、折旧表、附注、上传表、汇率、Excel 工具 | ztl-bps-workspace | 对应可见 skill 直连 | L | **直连白名单，禁扇出**；附注生成判断量偏大可升 M |
-| 报价/报价函/工时估算 | ztl-agent-mgmt | @pricing-quote-flow | H | |
-| 商机/立项/归档/管线/证照/收件分拣 | ztl-agent-mgmt | @mgmt-workflow-router | M | |
-| 新增代账客户建档 | ztl-bps-workspace | mgmt-new-bps-client | M | 管理域例外，留 bps |
-| 加入知识库/收进 Lao-wiki/摄入法规（例：这篇文章加到 Lao-wiki） | laos-compliance-kb | laos-kb-ingest 摄入流 | M | 文件放 待摄入/ 起步 |
-| 查老挝法规/税法/DTA/合规咨询 | laos-compliance-kb | 仓库会话直接提问 | M | 只查不摄入 |
-| 写文章/公众号/改写成 N 字/按批注改（例：改写 1200 字公众号文章） | ztl-content | ztl-content-writing-loop（账户级插件） | H | 论据源=laos-compliance-kb |
-| 翻译老挝法规/老文 OCR | lao-law-lib | lozh.py 管道 | M | 重活在 Google 管道，会话只做调度；排版→lao-law-layout；沉淀→kb |
+**「代号」列是派单时真正要填的值**——写进滴答卡的 `ws-<代号>` 标签与描述 `* 工作区：` 行。工作区列是 GitHub 仓库名，只用于人读，**填进任务包会导致回落到默认仓库跑错地方**。看板字段规范见 `dida-board-contract.md`。
+
+| 用户意图（触发词族） | 工作区（GitHub 名） | 代号 | 入口 | 模型档 | 备注 |
+|---|---|---|---|---|---|
+| 做账/loop/帮 XX 做 X 月/序时账到手 | ztl-bps-workspace | `bps` | @accounting-loop-flow | H | 四要件：客户/月份/目录/卡片子集 |
+| 整理客户资料/PBC 归位/资料清单（例：整理 CRCT 2026-06 资料） | ztl-bps-workspace | `bps` | @accounting-loop-flow 卡片0（或直呼 lao-pbc-file-organizer） | M | 单纯归档不做账→直呼 skill |
+| 月度报税/全套申报/交接包 | ztl-bps-workspace | `bps` | @lao-tax-monthly-filing-flow | H | 税务先于会计 |
+| WHT/预扣税/02/境外付款/补税台账 | ztl-bps-workspace | `bps` | @wht-filing-flow | M | 按次，不入月度节奏 |
+| 单独月结/关账/月底分录/期末调汇 | ztl-bps-workspace | `bps` | @lao-month-end-close | M | 与 loop 卡片3 二选一 |
+| 复核 TB/报表/底稿；复核申报表；文档预审/泛化把关 | ztl-bps-workspace | `bps` | @qc-review-accounting-flow / @qc-review-tax-flow / @qc-review-flow | H | 只审不改，判断密集 |
+| 开票/应收/催款/核销/计算表复核 | ztl-bps-workspace | `bps` | @ztl-ar | M | |
+| 单点：录进项/销项、算个税、折旧表、附注、上传表、汇率、Excel 工具 | ztl-bps-workspace | `bps` | 对应可见 skill 直连 | L | **直连白名单，禁扇出**；附注生成判断量偏大可升 M |
+| 报价/报价函/工时估算 | ztl-agent-mgmt | `mgmt` | @pricing-quote-flow | H | |
+| 商机/立项/归档/管线/证照/收件分拣 | ztl-agent-mgmt | `mgmt` | @mgmt-workflow-router | M | |
+| 新增代账客户建档 | ztl-bps-workspace | `bps` | mgmt-new-bps-client | M | 管理域例外，留 bps |
+| 加入知识库/收进 Lao-wiki/摄入法规（例：这篇文章加到 Lao-wiki） | laos-compliance-kb | `laos-wiki` | laos-kb-ingest 摄入流 | M | 文件放 待摄入/ 起步 |
+| 查老挝法规/税法/DTA/合规咨询 | laos-compliance-kb | `laos-wiki` | 仓库会话直接提问 | M | 只查不摄入 |
+| 写文章/公众号/改写成 N 字/按批注改（例：改写 1200 字公众号文章） | ztl-content | `content` | ztl-content-writing-loop（账户级插件） | H | 论据源=laos-compliance-kb |
+| 翻译老挝法规/老文 OCR | lao-law-lib | `lao-law-lib` | lozh.py 管道 | M | 重活在 Google 管道，会话只做调度；排版→lao-law-layout；沉淀→kb |
+
+### 代号 ↔ 仓库 ↔ 本地路径（权威对照）
+
+代号是 `orchestrator.config.json` 的 `workspaces` 键，三处（标签后缀 / 描述行 / config 键）必须字面一致。
+
+| 代号 | GitHub | 本地路径 |
+|---|---|---|
+| `bps` | yangxiyun/ztl-bps-workspace | `D:\ztl-agent-v2` |
+| `mgmt` | yangxiyun/ztl-agent-mgmt | `D:\ztl-agent-mgmt` |
+| `laos-wiki` | yangxiyun/laos-compliance-kb | `D:\laos-wiki` |
+| `content` | yangxiyun/ztl-content | `D:\ztl-content`（⛔ 旧 `D:\ZTL_Content` 已弃用，不存在） |
+| `lao-law-lib` | lao-law-lib | `D:\ztl-lao-law-lib` |
+| `mp` | yangxiyun/ztl-mp | `D:\ztl-mp` |
 
 ## 模型分级规则（token/成本纪律的模型维度）
 

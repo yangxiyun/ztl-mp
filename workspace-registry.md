@@ -32,11 +32,12 @@
 - **数据依赖**：仓库自含，云端可全流程执行（无本地盘依赖）。
 
 ### ztl-content（公众号/内容）✅
-- **本地**：`D:\ZTL_Content` ｜ **GitHub**：yangxiyun/ztl-content
+- **本地**：`D:\ztl-content` ｜ **GitHub**：yangxiyun/ztl-content ｜ **代号**：`content`
+  ⛔ 旧路径 `D:\ZTL_Content` 已弃用且不存在。它曾被写进 symphony 的 `workspaces.content`，导致 content 任务全部静默回落到 bps 仓库执行（`orchestrator.js` 的 `fs.existsSync` 判假只打一行 warn）。2026-08-09 已修。
 - **岗位**：研究文章、公众号选题库与成稿。
 - **接单范围**：写文章/公众号/改写成 N 字/按大纲写/按批注改/选题（**场景例：把这篇改写成 1200 字公众号文章 → 本仓库**）。
 - **入口**：写作闭环 skill `ztl-content-writing-loop`（claude.ai 账户级 Cowork 插件，Linear Issue/Document 驱动；论据源=laos-compliance-kb）。**双系统分工（2026-08-09 用户裁定）**：任务状态卡在滴答「MP派工单」，稿件工作台（Issue 大纲/Document 初稿/批注改稿）留在 Linear——Linear 是本 skill 的作业载体而非派工看板，写作任务建 Linear Issue 属正常流程。⚠️ 账户级有一对同 description 副本（ztl-content-writing-loop / ztl-linear-content-writing-loop），二留一后本表更新为留用名。
-- 〔2026-08-09 通读未能写实——仓库目前极简：本地未初始化 git（无法确认与 GitHub yangxiyun/ztl-content 的关联/提交历史），无 CLAUDE.md，只有 `选题候选\` 一个目录（内 2 篇选题 md，无成稿/模板目录），仓库内完全未提及 "Linear"，也未见 `ztl-content-writing-loop`/`ztl-linear-content-writing-loop` 说明（本地账户级 `~/.claude/skills/` 亦未找到同名目录）。Linear 对接方式与两个同名 skill 的留用裁定需向用户/账户级 Cowork 插件配置另行核实，本表此项暂标注为**待用户澄清**，不可视为已写实。〕
+- 〔2026-08-09 复核订正：上一版按 `D:\ZTL_Content`（不存在的路径）通读，故结论「未初始化 git、只有选题候选一个目录」**是错的**。实际 `D:\ztl-content` 有 git（remote=yangxiyun/ztl-content，Initial commit 2026-07-18），含 `articles/`、`knowledge-base/`、`选题候选/`、`ztl-contents-scaffold/`、`01_选题库.xlsx`、`README.md`，共 710K。仍待澄清的只剩一项：账户级两个同 description skill（ztl-content-writing-loop / ztl-linear-content-writing-loop）的二留一裁定未定。（"仓库内未提及 Linear" 一条已由上面的双系统分工裁定解释：Linear 是账户级 skill 的作业载体，不落在本仓库里。）〕
 
 ### lao-law-lib（法规翻译+OCR 管道）✅
 - **本地**：`D:\ztl-lao-law-lib`（⚠️ 非 `D:\lao-law-lib`，2026-08-09 通读核实实际路径） ｜ **GitHub**：yangxiyun/lao-law-lib
@@ -53,14 +54,16 @@
 - **GitHub**：yangxiyun/ztl-symphony
 - **去单机化（2026-08-09 用户选定 Claude Code 云端会话方案）**：数据全上云后，入口改 claude.ai App 直连 MP 云端会话（拆除 Telegram 常驻网关），执行走云端会话在目标仓库起会话、数据全 MCP、淘汰盘符参数；改造项记 backlog。以下描述为改造前的单机形态，逐步迁移中。
 - **角色**：JS 编排器——驱动 Claude Code 会话执行派单：按工作区起独立会话、`--resume` 同 session 续跑省 token、`symphony: 1A 2B` 应答续跑、AGENT-RETURN v1 对齐方（`orchestrator/prompt-builder.js` 的 AGENT_RETURN_SPEC/AUTONOMY_CONTRACT）。
-- **MP 关系**：MP 定域后经 symphony 在目标仓库起执行会话。**2026-08-09 二期落地**：①`gateway/` Telegram 网关（手机发单→headless MP 定域会话→滴答「MP派工单」建卡→事件推送→reply 决策续跑，环境变量 `MP_TG_TOKEN`/`MP_TG_CHAT_ID`）；②编排器事件流 `logs/events.jsonl`；③跨工作区执行（任务描述「工作区：<代号>」+ `cfg.workspaces` 白名单，代号与本表对齐：bps/mgmt/laos-wiki/content/lao-law-lib/mp）。
+- **MP 关系**：MP 定域后经 symphony 在目标仓库起执行会话。**2026-08-09 二期落地**：①`gateway/` Telegram 网关（手机发单→headless MP 定域会话→滴答「MP派工单」建卡→事件推送→reply 决策续跑，环境变量 `MP_TG_TOKEN`/`MP_TG_CHAT_ID`）；②编排器事件流 `logs/events.jsonl`；③跨工作区执行（**优先读卡片 `ws-<代号>` 标签**，读不到才回落任务描述「工作区：<代号>」行；+ `cfg.workspaces` 白名单，代号与本表对齐：bps/mgmt/laos-wiki/content/lao-law-lib/mp）。
 - **CLI 调用**：无 bin/npm script，运维走 `scripts\orchestrator.ps1 {start|stop|status|dry-run|check|install-autostart}`（内部为 `node orchestrator\orchestrator.js {run|status|dry-run|check}`）；真正执行体是它 spawn 的 `claude` CLI：`claude -p --output-format json --max-turns N [--model M --effort E] --allowedTools ... [--resume <sessionId>] --strict-mcp-config --add-dir Z:\10_BPS`，prompt 走 stdin（`orchestrator\orchestrator.js`）。
 - **API/可编程调用**：无独立 API server；`linear-client.js`/`dida-client.js` 是编排器内部对 Linear GraphQL / 滴答清单 v2 API 的封装，供其自身轮询用，非对外接口。
 - **会话生命周期**：每个 Linear issue 一次 claim 即 spawn 独立 claude 会话，`cwd = D:\ztl-agent-v2`；人在 issue 描述末尾粘 `symphony: 1A 2B` / `symphony: 通过/继续/<修改意见>` 触发续跑；`registry.js` 记录的 `sessionId` 存在则走 `--resume` 续跑（精简 prompt），resume 失败（session 过期等）自动回落冷启动重跑（完整任务书+断点续跑说明）。
 - **AGENT-RETURN v1**：`orchestrator\return-parser.js`（`parseAgentReturn`/`parseRunOutput`）解析 claude 最终文本尾部六段（【状态】DONE/MISSING_INPUT/GATE_CONFIRM/HUMAN_ESCALATION/ERROR 等），无此块判 `UNPARSED` 按 park 处理；协议规范权威在 `D:\ztl-agent-v2\ARCHITECTURE.md §3.5`，本仓库 `orchestrator\prompt-builder.js` 只是把契约文字嵌入 prompt 的消费方。
 
 ### ticktick-mcp（滴答清单 MCP server）🔧
-- 任务看板承载。**2026-08-09 已接通**：看板=symphony 控制平面清单「MP派工单」（四列 Todo/In Progress/In Review/Done + agent-* 标签），网关建卡、编排器流转，单一状态源；ticktick-mcp 仅供会话侧查看/管理，网关侧走 symphony 的 dida-client.js（同一账号同一数据）。
+- 任务看板承载。**2026-08-09 已接通**：看板=symphony 控制平面清单「MP派工单」（四列 Todo/In Progress/In Review/Done + agent-* 标签），单一状态源；ticktick-mcp 供会话侧建卡/查看/管理，编排器侧走 symphony 的 dida-client.js（同一账号同一数据）。
+- **看板字段规范一律以 `dida-board-contract.md` 为准**（project/列 id、封闭标签词汇表、建卡模板、状态机、决策回填、双认领方约定）。2026-08-09 之前该契约不存在，App 侧 MP 建的卡因缺 columnId、缺 `agent-ready`、自造语义标签而全部卡死无人认领——新增或改动看板字段前先读该文件。
+- **认领方两个**：本地 orchestrator 为主（10 秒轮询）；云端 routine 兜底（10 分钟轮询，仅在心跳过期 >3 分钟且卡片静置 ≥15 分钟时接管，接管卡打 `agent-cloud`）。心跳载体=独立清单 `__symphony-heartbeat__`。
 
 ## ⛔ 弃用名单（2026-08-08 确认，MP 永不派单；建议 GitHub Archive 防混淆）
 
