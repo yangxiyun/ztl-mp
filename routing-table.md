@@ -49,7 +49,7 @@
    - 代账客户资料（WorkDrive `10_BPS`，本地 `Z:\10_BPS\` 即其 TrueSync 映射视图）**已全量在云端**→ 云端会话直接经 zoho-workdrive MCP 读写执行，不再派回本地；
    - 管理库（`D:\ZTL_Manage\`+`D:\ZTL_Customers\`，整体迁 WorkDrive `ZTL_Manage` 进行中）→ 未完成上云前，碰它的任务派回本地会话兜底；上云完成并验证后，本 gate 整体删除；
    - `D:\_BPS\`（旧 PBC 文件夹）**已废弃**——任何路由/任务包不得再指向它。
-   - 云端目录标准见 `CLOUD-DATA-BLUEPRINT.md`。
+   - 云端目录标准见 `CLOUD-DATA-BLUEPRINT.md`；碰商机/合同大文件遵其「大文件访问纪律」（索引先行、原件按需、摘要沉淀，禁泛读派单）。
 
 ## 直连白名单（简单任务禁扇出，token 纪律）
 
