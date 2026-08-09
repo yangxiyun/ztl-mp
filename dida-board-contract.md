@@ -1,6 +1,14 @@
 # 滴答看板契约（dida-board-contract）— 「MP派工单」的唯一硬约定
 
-> **单一权威。** MP 建卡、本地 orchestrator 认领、云端 routine 兜底，三方全部按本文件对齐。
+> **单一权威。** 所有建卡方与认领方全部按本文件对齐。
+>
+> | 角色 | 谁 | 状态 |
+> |---|---|---|
+> | 建卡 | claude.ai App 的「MP」Project（走滴答 connector） | ✅ 规格见 §3 与 `docs/MP-Project指令.md` |
+> | 建卡 | Telegram 网关 `ztl-symphony/gateway/`（bot `@ztl_mp_bot`） | ✅ 2026-08-09 已补 `ws-*` 标签 |
+> | 认领 | 本地 orchestrator（10 秒轮询，已装开机自启） | ✅ 主认领方 |
+> | 认领 | 云端 routine（兜底） | ⛔ 未实现，见 §6 |
+
 > 本文件在 2026-08-09 之前**不存在**——这正是 App 侧 MP 建的卡全部卡死的根因：它无从知晓这套约定。
 > 与各仓库文档冲突时，**看板字段以本文件为准**。最后更新：2026-08-09。
 
@@ -122,6 +130,12 @@ symphony: 1A 2B
 
 ## 6. 双认领方约定（本地为主，云端兜底）
 
+> ⛔ **云端兜底目前未实现——2026-08-09 勘察发现两条硬阻断**，本节是设计契约，不是现状：
+> 1. **轮询间隔**：claude.ai Routines API 最小 cron 间隔 **1 小时**，`*/10 * * * *` 会被拒。
+> 2. **云端够不到滴答**：cloud routine 只能挂 claude.ai connector，而滴答既不在已装 connector 列表里，MCP registry 里也搜不到。routine 无法读写「MP派工单」。
+>
+> 本地侧那一半（心跳写入、`recover()` 避让 `agent-cloud`）**已实现并验证**，云端接上即可用。当前实际形态=本地 orchestrator 单认领方 + 开机自启；关机期间卡片积压在 Todo，不丢单，开机后自动补跑。
+
 两个认领方共用同一块看板，靠**心跳 + 静置时长**避免抢同一张卡。
 
 | | 本地 orchestrator | 云端 routine |
@@ -131,7 +145,19 @@ symphony: 1A 2B
 | 认领条件 | 标准五条（第 0 节） | 标准五条 **且** 心跳过期 >3 分钟 **且** 卡片已静置 ≥15 分钟 **且** 同客户无 in-flight |
 | 接管标记 | `agent-running` | `agent-running` + `agent-cloud` |
 
-**心跳**：独立清单 `__symphony-heartbeat__` 内的单张卡，本地 orchestrator 每 60 秒更新其 content 时间戳。云端 routine 每轮第一件事就是读它——**心跳新鲜就立即结束本轮，不做任何其他动作**（这是 99% 轮次的路径，必须极廉价）。
+**心跳**：独立清单 `__symphony-heartbeat__`（id `6a782cd1049e2ce726a1a894`）里标题为 `local-orchestrator` 的单张卡，本地 orchestrator 每 60 秒改写其 content：
+
+```
+本地 orchestrator 在线心跳
+
+lastBeat: 2026-08-09T07:32:35.485Z
+pid: 7676
+running: 1/5
+```
+
+云端 routine 每轮第一件事就是读它——**心跳新鲜（<3 分钟）就立即结束本轮，不做任何其他动作**。这是 99% 轮次要走的路径，必须极廉价：一次 `get_task_by_id` 读完就退，别顺手做别的。
+
+⚠️ **判活必须解析 content 里的 `lastBeat:` 行，不能用任务的 `modifiedTime`。** 实测滴答在只改 content 时**不刷新 `modifiedTime`**（心跳卡的 modifiedTime 一直停在创建时刻）。用 modifiedTime 判活会让云端永远认为本地已下线，从而每 10 分钟抢一次卡。
 
 **防双跑铁律**：本地启动时的 `recover()` 会把「带 `agent-running` 但本地无记录」的卡拨回 Todo——这会直接抢走云端正在跑的任务。因此 **`recover()` 必须跳过带 `agent-cloud` 的卡**。
 

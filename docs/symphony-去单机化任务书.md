@@ -5,16 +5,18 @@
 
 ## 背景
 
-ZTL「一人公司」Agent 平台的数据面已全部迁到 Zoho WorkDrive（云端），最后一块依赖单机的是 symphony 编排器 + Telegram 网关——它们常驻办公室 Windows 电脑，一关机就断。用户已拍板走 **Claude Code 云端会话** 路线彻底去掉常驻程序：入口改用 claude.ai App 直连 MP 会话，执行走云端会话，数据全走 MCP。
+ZTL「一人公司」Agent 平台的数据面已全部迁到 Zoho WorkDrive（云端），最后一块依赖单机的是 symphony 编排器 + Telegram 网关——它们常驻办公室 Windows 电脑，一关机就断。用户已拍板走 **Claude Code 云端会话** 路线减少常驻程序依赖：执行走云端会话，数据全走 MCP。
 
 ## 目标
 
-关掉所有本地电脑，手机/网页照样能派单执行。为此需要 4 项改造：
+关掉所有本地电脑，手机/网页照样能派单执行。为此需要 3 项改造：
 
-### 1. 拆除 Telegram 常驻网关
-- 移除/停用 `gateway/`（gateway.js 主循环、mp-dispatch.js、telegram.js）与 `scripts/gateway.ps1`。
-- 环境变量 `MP_TG_TOKEN`/`MP_TG_CHAT_ID` 相关逻辑一并清理。
-- 保留 mp-dispatch 里「MP 定域会话→任务包→建卡」的**纯逻辑**（若有复用价值），但触发源不再是 Telegram 长轮询。
+### 1. ~~拆除 Telegram 常驻网关~~ → **2026-08-09 用户改判：保留并继续使用**
+- ⛔ **不要移除** `gateway/`（gateway.js / mp-dispatch.js / telegram.js）与 `scripts/gateway.ps1`，`MP_TG_TOKEN`/`MP_TG_CHAT_ID` 也保留。
+- Telegram 与 claude.ai App 的 MP Project 并行作为**两个派单入口**，都往同一块滴答看板「MP派工单」建卡，互不冲突。
+- 网关建卡已于 2026-08-09 补上 `ws-<代号>` 路由标签，与 `ztl-mp/dida-board-contract.md` 契约对齐。
+- 遗留待办：网关是常驻本地进程，关机即停（Telegram 派单在关机期间收不到响应）；如需常开，参照 orchestrator 的做法给它也装开机自启。
+- 已核（2026-08-09）：bot `@ztl_mp_bot` 有效、chat_id 有效、无 webhook 冲突。此前日志里的 `chat not found` 是当时尚未与 bot 建立会话所致，`This operation was aborted` 是间歇性网络超时，均非配置错误。
 
 ### 2. 执行改云端会话
 - orchestrator 起执行会话的方式，从本地 spawn `claude` CLI（`cwd = D:\ztl-agent-v2`）改为 Claude Code 云端会话在目标仓库起会话。
