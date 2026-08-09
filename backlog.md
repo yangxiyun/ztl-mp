@@ -12,6 +12,7 @@
 - [ ] 2026-08-09 【ztl-bps-workspace】`shared\代账目录标准.md` 代账根注册表加 WorkDrive 云根记号（`wd:10_BPS/...`），并清除 `D:\_BPS\` 旧根条目（已废弃）。
 - [ ] 2026-08-09 【ztl-agent-mgmt】归档类 skill（mgmt-onboard-opportunity / mgmt-archive-project）补「生成档案卡」步骤：一页 md（当事方/金额/期限/关键条款/原件 WorkDrive 指针）存 `_meta\db\` 旁；存量惰性补做。
 - [ ] 2026-08-09 【ztl-symphony】去单机化（**Claude Code 云端会话方案**，用户选定，另开有该仓库权限会话执行）：~~①入口拆除 Telegram 常驻 gateway~~ **①作废——2026-08-09 用户改判保留 Telegram 并继续使用**，Telegram 与 claude.ai App MP Project 并行作为两个派单入口，同写「MP派工单」；②执行改云端会话在目标仓库起会话；③淘汰 orchestrator spawn 里的 `--add-dir Z:\10_BPS` 等盘符参数，数据全走 MCP；④定时任务改 Routines/CronCreate（⚠️ 见下方云端兜底一项：Routines 最小间隔 1 小时且够不到滴答）。
+- [ ] 2026-08-09 【ztl-symphony】**企业微信双向接入**（用户拍板，方案权威见 `docs/企业微信接入方案.md`）：V1=群机器人 webhook 出向通知（`MP_WECOM_WEBHOOK`，完成/卡住/待决策三时点推送）；V2=serverless 回调入向发单（腾讯云 SCF：验签+AES 解密+userid 白名单 → headless MP 定域 → 按 dida-board-contract 建卡 → `symphony:` 续跑）。**待用户人工**：企微建自建应用（AgentId/Secret/CorpId/Token/EncodingAESKey）、开腾讯云账号、V1 先建群机器人拿 webhook URL。
 - [ ] 2026-08-09 【ztl-symphony】Telegram 网关装开机自启：`scripts\gateway.ps1` 目前无 `install-autostart` 子命令（orchestrator.ps1 有）。网关是常驻本地进程，关机即停，Telegram 派单在关机期间无响应。照 orchestrator 的启动文件夹方案补一个即可。
 
 - [ ] 2026-08-09 【MP Project / ztl-symphony】**手机端附件通道**：claude.ai App 的 MP Project 只有连接器（WorkDrive/滴答），无文件系统与 git，用户在手机上传的附件落不进目标仓库（本次《所得税法88号》PDF 即卡在此处，MP Project 只能建卡后停）。方案：MP Project 收到附件先经 WorkDrive MCP 转存约定中转目录（建议 `wd:ZTL-Manage/00_Inbox/_mp转交/`），任务包【参数】写 WorkDrive 指针而非本地路径；执行侧会话按指针取件后落各仓库入口目录（如 laos-compliance-kb 的 `待摄入/`）。中转目录标准写入 `CLOUD-DATA-BLUEPRINT.md`。
