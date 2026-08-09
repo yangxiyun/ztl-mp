@@ -25,7 +25,7 @@
 - **数据依赖**：管理文档数据库 = WorkDrive 团队文件夹 `ZTL-Manage`（✅ 2026-08-09 由 `D:\ZTL_Manage\` 整体迁入完成并经 MCP 读写验证；商务客户主档=子目录 `03_customers`，云端会话直接读写）。`_meta\db\` 六张表（客户.md/商机.md/项目.md/合同.md/联系人.md/收款.md，单一事实来源）等 `_meta` 资料按需整理修改后移入本仓库 git 化，移一批引用切一批。其余目录 `00_Inbox`/`01_商机`/`02_合同和结算`/`04_专项工作`/`05_模板` 随整体上云。
 
 ### laos-compliance-kb（Lao-wiki 合规知识库）✅
-- **本地**：`D:\laos-wiki` ｜ **GitHub**：yangxiyun/laos-compliance-kb（公开）
+- **本地**：`D:\laos-wiki` ｜ **GitHub**：yangxiyun/laos-compliance-kb（**私有**——2026-08-09 用户裁定由 PUBLIC 改 PRIVATE；此前为公开，`处理完成/` 内 40+ 份原件曾公开可见，如需评估影响见该日 Log）
 - **岗位**：老挝合规知识库（税务/会计/工商/人力资源四域 + 业务经验库），Obsidian+GitHub 双面。三层架构（原始资料/Wiki 页面/META），`META/SCHEMA.md` 是宪法。
 - **接单范围**：加入知识库/收进 Lao-wiki/摄入这份法规/这篇文章存档知识库；查老挝法规/税法/DTA/合规问题（**场景例：把这篇文章加到 Lao-wiki → 本仓库**）。
 - **入口**：摄入=`laos-kb-ingest` 工作流（文件放 `待摄入/` → 生成 Wiki 页 → 更新 META/Index+Log → git push）；查询=直接在该仓库会话提问。
