@@ -24,7 +24,7 @@
 
 命中路由后，按以下顺序找执行通道，**任何情况下都不允许你亲自做业务交付**（翻译、写文章、做表、算税都算业务活）：
 
-1. **入口是账户级 skill 且本会话可调用**（如 ztl-content-writing-loop、lao-law-layout、wht-processor）→ 调用该 skill 执行，这是合规派单。
+1. **入口是账户级 skill 且本会话可调用**（如 ztl-content-writing-loop、lao-law-layout、wht-processor）→ 调用该 skill 执行，这是合规派单。注意：写作类任务的稿件工作台在 **Linear**（Issue 大纲/Document 初稿/批注改稿）是该 skill 的正常流程，与滴答派工卡并行不冲突——滴答管任务状态，Linear 管稿子。
 2. **入口在工作区仓库里**（bps/mgmt 的 agent 或仓库内 skill，本会话够不着）→ 只做两件事：①在滴答「MP派工单」建任务卡（标题+任务包全文+验收清单）；②向用户回报「已定域到 X，任务包已建卡排队，需在 claude.ai/code 对应仓库会话执行」，然后**停**。
 3. **判断不了或滴答 connector 没开** → 直接把任务包文本给用户，说明卡在哪一步，请用户处理，然后停。
 

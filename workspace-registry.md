@@ -35,7 +35,7 @@
 - **本地**：`D:\ZTL_Content` ｜ **GitHub**：yangxiyun/ztl-content
 - **岗位**：研究文章、公众号选题库与成稿。
 - **接单范围**：写文章/公众号/改写成 N 字/按大纲写/按批注改/选题（**场景例：把这篇改写成 1200 字公众号文章 → 本仓库**）。
-- **入口**：写作闭环 skill `ztl-content-writing-loop`（claude.ai 账户级 Cowork 插件，Linear Issue/Document 驱动；论据源=laos-compliance-kb）。⚠️ 账户级有一对同 description 副本（ztl-content-writing-loop / ztl-linear-content-writing-loop），二留一后本表更新为留用名。
+- **入口**：写作闭环 skill `ztl-content-writing-loop`（claude.ai 账户级 Cowork 插件，Linear Issue/Document 驱动；论据源=laos-compliance-kb）。**双系统分工（2026-08-09 用户裁定）**：任务状态卡在滴答「MP派工单」，稿件工作台（Issue 大纲/Document 初稿/批注改稿）留在 Linear——Linear 是本 skill 的作业载体而非派工看板，写作任务建 Linear Issue 属正常流程。⚠️ 账户级有一对同 description 副本（ztl-content-writing-loop / ztl-linear-content-writing-loop），二留一后本表更新为留用名。
 - 〔2026-08-09 通读未能写实——仓库目前极简：本地未初始化 git（无法确认与 GitHub yangxiyun/ztl-content 的关联/提交历史），无 CLAUDE.md，只有 `选题候选\` 一个目录（内 2 篇选题 md，无成稿/模板目录），仓库内完全未提及 "Linear"，也未见 `ztl-content-writing-loop`/`ztl-linear-content-writing-loop` 说明（本地账户级 `~/.claude/skills/` 亦未找到同名目录）。Linear 对接方式与两个同名 skill 的留用裁定需向用户/账户级 Cowork 插件配置另行核实，本表此项暂标注为**待用户澄清**，不可视为已写实。〕
 
 ### lao-law-lib（法规翻译+OCR 管道）✅
