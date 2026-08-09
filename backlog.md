@@ -4,6 +4,12 @@
 
 ## 待办
 
+- [ ] 2026-08-09 【ztl-symphony】任务包【模型】字段解析：`mp-dispatch.js`/`orchestrator.js` 读 L/M/H → 映射 model id（L=claude-haiku-4-5、M=claude-sonnet-5、H=claude-opus-5）+ effort（low/medium/high）传 `--model/--effort`；无字段沿用现默认；ERROR/UNPARSED 重派自动升一档。
+- [ ] 2026-08-09 【人工】`D:\ZTL_Manage\`（并入 `D:\ZTL_Customers\`）整体迁 WorkDrive `ZTL_Manage`；完成后云端跑一单资料整理验证 zoho-workdrive MCP 读写，验证通过删 routing-table 云覆盖 gate。
+- [ ] 2026-08-09 【ztl-agent-mgmt】`_meta` 资料（含六张表）按需整理修改后移入仓库 git 化，移一批引用切一批。
+- [ ] 2026-08-09 【ztl-bps-workspace】`shared\代账目录标准.md` 代账根注册表加 WorkDrive 云根记号（`wd:10_BPS/...`），并清除 `D:\_BPS\` 旧根条目（已废弃）。
+- [ ] 2026-08-09 【ztl-symphony】去单机化：网关/编排器迁云主机或改 Claude Code remote 会话，淘汰 `--add-dir Z:\10_BPS` 类盘符参数。
+
 - [ ] 2026-08-08 注册表〔待补〕项写实：ztl-symphony（CLI/API 调用方式、会话生命周期）、ztl-agent-mgmt（12 skill 清单核对）、ztl-content（目录与 Linear 对接）、lao-law-lib（管道用法与本地路径）——需把对应仓库挂进会话通读。
 - [ ] 2026-08-08 claude.ai 账户级陈旧副本停用（用户手工）：fs-notes-lao、bol-exchange-rate、ztl-content-writing-loop/ztl-linear-content-writing-loop 二留一；wht-processor、journal-cleanup 确认后处置。清单详见 bps 仓库分支 `claude/agent-orchestration-platform-uw5xvv` 的 `_archive\2026-08-MP分层路由改造记录.md`。
 - [ ] 2026-08-08 bps 分层路由改造分支（同上分支，17 skill 隐藏、路由条目 49→32）**待用户裁定是否合并**——用户已明示不并 master，保持分支存放；MP 路由不依赖它（MP 按工作区定域，与 bps 域内可见性无关）。

@@ -30,7 +30,7 @@ ztl-symphony 编排器
 1. ✅ **symphony 对接勘察**（2026-08-09）：勘察报告落 `ztl-symphony/docs/MP-对接勘察报告.md`。结论：控制平面（滴答清单）本身就是提交/续跑 API；补了两个缺口——G1 结构化事件出口（`logs/events.jsonl`）、G3 跨工作区 cwd（任务描述「工作区：<代号>」+ `cfg.workspaces` 白名单）。
 2. ✅ **Telegram Bot**（2026-08-09）：`ztl-symphony/gateway/` 三模块（gateway.js 主循环 / mp-dispatch.js MP 定域会话→任务包→建卡 / telegram.js 长轮询封装），`scripts/gateway.ps1` 运维。安全已落实：仅 `MP_TG_CHAT_ID` 白名单（其余静默丢弃）、token 走 `MP_TG_TOKEN` 环境变量。**待人工**：BotFather 建 bot 配好两个环境变量后跑验收场景。
 3. ✅ **任务看板**（2026-08-09）：控制平面清单原地改名「MP派工单」（在途任务零迁移），建卡=网关 createIssue，状态流转=编排器现成状态机（Todo→In Progress→In Review→Done + agent-* 标签），不另设状态源。⚠️ 滴答里另有一个空的列表项目「MP派工」（用户手建），已冗余，建议删除。
-4. **同步盘数据面**：选定 Google Drive 桌面版或 Zoho WorkDrive TrueSync，同步 `D:\_BPS\` 活跃客户（可分批）；在 bps 仓库 `shared\代账目录标准.md` 代账根注册表加「云根」条目；验证云端会话读写后，routing-table 的「数据位置 gate」按客户逐步放行云端执行。
+4. 🔄 **云端数据面**（2026-08-09 改造，权威见 `CLOUD-DATA-BLUEPRINT.md`）：主存储 = Zoho WorkDrive。代账客户资料已在 WorkDrive `10_BPS`（`Z:\10_BPS\` 即 TrueSync 视图），路由已改云端直执行；剩余步骤=`D:\ZTL_Manage\`（并入 `D:\ZTL_Customers\`）整体迁 WorkDrive + 云端 MCP 读写验证一单 + bps `shared\代账目录标准.md` 加云根记号。⛔ `D:\_BPS\` 旧 PBC 文件夹废弃，不同步不迁移。
 5. **定时任务**：月度申报日历提醒、每日 AR 简报等走 Routines 或 symphony cron，产出走同一回报通道。
 6. **验收场景**：三场景手机端全链路跑通（CRCT 资料整理需同步盘覆盖 CRCT；Lao-wiki 摄入与公众号改写纯云可跑）。
 

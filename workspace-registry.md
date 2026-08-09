@@ -11,7 +11,7 @@
 - **岗位**：代账做账全流程 + 老挝月度/按次税务申报 + 质控预审 + 应收账款。41 skill + 8 编排 agent。
 - **接单范围（触发词）**：做账/loop/序时账/银行核对/往来对账/调汇/月结/结账/TB/报表/附注/上传表/凭证复核；报税/VAT/PIT/WHT/预扣税/特区附加/税金汇总/申报表；复核 TB·报表·申报表/质控/预审；开票/应收/催款/核销/AR；客户资料整理/建档/PBC（**场景例：整理 CRCT 2026-06 客户资料 → 本仓库**）。
 - **入口**：整月做账=`@accounting-loop-flow`；月度报税=`@lao-tax-monthly-filing-flow`；WHT 按次=`@wht-filing-flow`；单独月结=`@lao-month-end-close`；质控=`@qc-review-accounting-flow`/`@qc-review-tax-flow`/`@qc-review-flow`；应收=`@ztl-ar`；资料整理=`lao-pbc-file-organizer`（经 loop 卡片0 或直呼）。
-- **数据依赖**：代账根 `D:\_BPS\`、`Z:\10_BPS\`（多根注册表见其 `shared\代账目录标准.md`）；`D:\ZTL_Customers\` 商务主档。**云端执行前提=同步盘已覆盖对应客户目录**，否则派回本地会话。
+- **数据依赖**：代账根 = WorkDrive `10_BPS`（本地 `Z:\10_BPS\` 为 TrueSync 映射视图；目录标准见其 `shared\代账目录标准.md`）。⛔ `D:\_BPS\` 旧 PBC 文件夹 2026-08-09 裁定废弃，不得再指向。商务客户主档随 ZTL_Customers 并入 WorkDrive `ZTL_Manage`（见 mgmt 条目）。**云端会话经 zoho-workdrive MCP 直接读写执行**（云覆盖 gate 见 routing-table 消歧规则 6；数据面权威见 `CLOUD-DATA-BLUEPRINT.md`）。
 - **上报协议**：AGENT-RETURN v1（其 ARCHITECTURE.md §3.5，全平台协议权威）。
 - **分层路由改造**：17 skill 隐藏 + MANIFEST/CLAUDE 同步在其分支 `claude/agent-orchestration-platform-uw5xvv`（2026-08-08 用户裁定暂不并 master，保持分支存放）。
 
@@ -22,7 +22,7 @@
 - **入口**：管理类=`@mgmt-workflow-router`；报价类=`@pricing-quote-flow`。
 - **例外**：新增代账客户建档（mgmt-new-bps-client）与通用模板填充（doc-template-fill）在 bps 仓库。
 - **12 skill 清单核实（2026-08-09 通读，与描述一致）**：mgmt-* 7个（mgmt-onboard-opportunity/mgmt-convert-to-project/mgmt-archive-project/mgmt-pipeline-review/mgmt-archive-licenses/mgmt-client-insights/mgmt-inbox-triage）+ ztl-pricing-* 4个（ztl-pricing-framework/ztl-pricing-audit/ztl-pricing-bps/ztl-pricing-advisory）+ annual-portfolio-rollover 1个。2 agent 均在 `.claude\agents\`：`mgmt-workflow-router`（管理域路由入口）、`pricing-quote-flow`（报价九步法编排）。
-- **数据依赖**：`D:\ZTL_Manage\_meta\db\`（单一事实来源，6张表：客户.md/商机.md/项目.md/合同.md/联系人.md/收款.md）；其余目录 `00_Inbox`/`01_商机`/`02_合同和结算`/`04_专项工作`/`05_模板`。
+- **数据依赖**：管理文档数据库 = WorkDrive `ZTL_Manage`（🔄 由 `D:\ZTL_Manage\` 整体迁入进行中，`D:\ZTL_Customers\` 商务客户主档并入其子目录一同上云；上云完成前碰它的任务派回本地）。`_meta\db\` 六张表（客户.md/商机.md/项目.md/合同.md/联系人.md/收款.md，单一事实来源）等 `_meta` 资料按需整理修改后移入本仓库 git 化，移一批引用切一批。其余目录 `00_Inbox`/`01_商机`/`02_合同和结算`/`04_专项工作`/`05_模板` 随整体上云。
 
 ### laos-compliance-kb（Lao-wiki 合规知识库）✅
 - **本地**：`D:\laos-wiki` ｜ **GitHub**：yangxiyun/laos-compliance-kb（公开）
