@@ -12,6 +12,7 @@
 - [ ] 2026-08-09 【ztl-bps-workspace】`shared\代账目录标准.md` 代账根注册表加 WorkDrive 云根记号（`wd:10_BPS/...`），并清除 `D:\_BPS\` 旧根条目（已废弃）。
 - [ ] 2026-08-09 【ztl-agent-mgmt】归档类 skill（mgmt-onboard-opportunity / mgmt-archive-project）补「生成档案卡」步骤：一页 md（当事方/金额/期限/关键条款/原件 WorkDrive 指针）存 `_meta\db\` 旁；存量惰性补做。
 - [ ] 2026-08-09 【ztl-symphony】去单机化（**Claude Code 云端会话方案**，用户选定，另开有该仓库权限会话执行）：~~①入口拆除 Telegram 常驻 gateway~~ **①作废——2026-08-09 用户改判保留 Telegram 并继续使用**，Telegram 与 claude.ai App MP Project 并行作为两个派单入口，同写「MP派工单」；②执行改云端会话在目标仓库起会话；③淘汰 orchestrator spawn 里的 `--add-dir Z:\10_BPS` 等盘符参数，数据全走 MCP；④定时任务改 Routines/CronCreate（⚠️ 见下方云端兜底一项：Routines 最小间隔 1 小时且够不到滴答）。
+- [ ] 2026-08-09 【ztl-symphony】**MP 驾驶舱**（用户拍板，规格随 spawn 会话任务书）：本地单页网页 `dashboard/`（Node 服务 0.0.0.0:8848 + 单文件 index.html），四功能=一句话录入自动派单（复用 mp-dispatch）/看板状态监控/待决策回填（symphony: 协议）/产出链接直达（卡片 `## 产出` 段），下半屏四类别统计面板（营销传播/销售前期/项目执行/财务人力，今日/本周/本月）。契约扩展（类别行+产出段）已入 `dida-board-contract.md` §3/§3.1。
 - [ ] 2026-08-09 【ztl-symphony】**企业微信 V1 出向通知**（方案见 `docs/企业微信接入方案.md`）：群机器人 webhook（`MP_WECOM_WEBHOOK`），orchestrator 事件流完成/卡住/待决策三时点推送，消息遵守汇报纪律。代码在 `feat/wecom-gateway` 分支（V2 部分保留备查但不部署）。**待用户人工**：企微建群→加群机器人→拿 webhook URL 交 symphony 配 `MP_WECOM_WEBHOOK`。
 - [x] 2026-08-09 ⛔ **企微 V2 入向发单放弃**（部署实测裁定）：企微接收消息回调强制大陆 ICP 备案+主体匹配域名，致同老挝无法满足（`tencentscf.com` 域名核验失败）。发单入口保持 Telegram + claude.ai App 两条。为 V2 建的腾讯云函数 `wecom` 可删除。
 - [ ] 2026-08-09 【ztl-symphony】Telegram 网关装开机自启：`scripts\gateway.ps1` 目前无 `install-autostart` 子命令（orchestrator.ps1 有）。网关是常驻本地进程，关机即停，Telegram 派单在关机期间无响应。照 orchestrator 的启动文件夹方案补一个即可。
