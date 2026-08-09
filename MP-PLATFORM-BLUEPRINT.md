@@ -31,7 +31,7 @@ ztl-symphony 编排器
 2. ✅ **Telegram Bot**（2026-08-09）：`ztl-symphony/gateway/` 三模块（gateway.js 主循环 / mp-dispatch.js MP 定域会话→任务包→建卡 / telegram.js 长轮询封装），`scripts/gateway.ps1` 运维。安全已落实：仅 `MP_TG_CHAT_ID` 白名单（其余静默丢弃）、token 走 `MP_TG_TOKEN` 环境变量。**待人工**：BotFather 建 bot 配好两个环境变量后跑验收场景。
 3. ✅ **任务看板**（2026-08-09）：控制平面清单原地改名「MP派工单」（在途任务零迁移），建卡=网关 createIssue，状态流转=编排器现成状态机（Todo→In Progress→In Review→Done + agent-* 标签），不另设状态源。⚠️ 滴答里另有一个空的列表项目「MP派工」（用户手建），已冗余，建议删除。
 4. ✅ **云端数据面**（2026-08-09 完成，权威见 `CLOUD-DATA-BLUEPRINT.md`）：主存储 = Zoho WorkDrive。代账客户资料在 WorkDrive `10_BPS`、管理库整体迁 WorkDrive `ZTL-Manage`（含客户主档 `03_customers`），云端 MCP 读写已验证，路由「数据位置 gate」删除。⛔ `D:\_BPS\` 旧 PBC 文件夹废弃。
-5. 🔄 **去单机化（Claude Code 云端会话方案，2026-08-09 用户选定）**：**入口三通道并存**——Telegram 网关（2026-08-09 用户改判保留，已连通）＋ claude.ai App 的 MP Project ＋ 企业微信（2026-08-09 用户拍板双向接入，方案见 `docs/企业微信接入方案.md`：V1 群机器人出向通知，V2 serverless 回调入向发单），三者同写滴答「MP派工单」，卡片格式统一按 `dida-board-contract.md`；**执行**走 Claude Code 云端会话在目标仓库起会话（clone 即用、数据走 MCP、无盘符依赖）；**数据访问**全 MCP，淘汰 `--add-dir Z:\10_BPS` 盘符参数。盘符参数改造记 backlog，另开有权限会话执行。
+5. 🔄 **去单机化（Claude Code 云端会话方案，2026-08-09 用户选定）**：**入口三通道并存**——Telegram 网关（2026-08-09 用户改判保留，已连通）＋ claude.ai App 的 MP Project ＋ 企业微信（2026-08-09 实测裁定：**仅 V1 群机器人出向通知**，V2 入向发单因大陆备案域名要求放弃，方案见 `docs/企业微信接入方案.md`；故发单仍是 Telegram + App 两条），入口同写滴答「MP派工单」，卡片格式统一按 `dida-board-contract.md`；**执行**走 Claude Code 云端会话在目标仓库起会话（clone 即用、数据走 MCP、无盘符依赖）；**数据访问**全 MCP，淘汰 `--add-dir Z:\10_BPS` 盘符参数。盘符参数改造记 backlog，另开有权限会话执行。
 6. **定时任务**：月度申报提醒、每日 AR 简报等改用 Routines/CronCreate 云端定时，产出经同一 MCP 回报通道。
 7. **验收场景**：三场景 App 端全链路跑通（CRCT 资料整理、Lao-wiki 摄入、公众号改写均纯云可跑）。
 
