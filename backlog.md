@@ -4,19 +4,21 @@
 
 ## 待办
 
-- [ ] 2026-08-09 【ztl-agent-mgmt】**切引用到 WorkDrive**：11 个文件 37 处硬编码 `D:\ZTL_Manage\` / `D:\ZTL_Customers\`（CLAUDE.md、agents/mgmt-workflow-router、agents/pricing-quote-flow、skills 8 个：mgmt-onboard-opportunity/mgmt-convert-to-project/mgmt-archive-project/mgmt-pipeline-review/mgmt-archive-licenses/mgmt-client-insights/mgmt-inbox-triage/annual-portfolio-rollover）全部改为 `wd:ZTL-Manage/...` 记号 + zoho-workdrive MCP 读写。根因：2026-08-09 数据迁云端时**只迁数据没切引用**，当天广能发商机单的全部成果因此落回已废弃的本地旧根。同批把那批成果迁上云（见下一条）。
-- [ ] 2026-08-09 【ztl-agent-mgmt】**广能发商机成果回迁云端**：`D:\ZTL_Manage\01_商机\S157_广能发老挝EPC项目财税顾问服务_2026.08\`（需求记录/报价函 docx/报价推理/测算报价/服务方案 共 5 件）、`D:\ZTL_Customers\` 下当日新建的 7 份 `_客户信息.md` + `客户清单.csv`、`_meta\db\` 三张表（客户/联系人/商机）当日增量 → 合并进 WorkDrive `ZTL-Manage` 对应位置。⚠️ 三张表云端已有 8-09 迁移快照，必须**按行增量合并**，禁整表覆盖。
+- [ ] 2026-08-09 【用户手工】**WorkDrive 团队文件夹改名**：`ZTL-Manage` → `20_ZTLMGMT`（folder id `dma7m8aa2b79ed2704056ad4b790a4c104532`）。MCP 做不了——`renameFileOrFolder` 对团队文件夹返回 `Unauthorized access`（只覆盖普通文件/文件夹），须在 WorkDrive 网页端右键重命名。**全部路由文档已按新名写就**，改名前云端实名仍是 `ZTL-Manage`，两者不一致期间按名搜索会落空（按 id 定位不受影响）。
+- [ ] 2026-08-09 【ztl-agent-mgmt】**切引用到 WorkDrive**：11 个文件 37 处硬编码 `D:\ZTL_Manage\` / `D:\ZTL_Customers\`（CLAUDE.md、agents/mgmt-workflow-router、agents/pricing-quote-flow、skills 8 个：mgmt-onboard-opportunity/mgmt-convert-to-project/mgmt-archive-project/mgmt-pipeline-review/mgmt-archive-licenses/mgmt-client-insights/mgmt-inbox-triage/annual-portfolio-rollover）全部改为 `wd:20_ZTLMGMT/...` 记号 + zoho-workdrive MCP 读写。根因：2026-08-09 数据迁云端时**只迁数据没切引用**，当天广能发商机单的全部成果因此落回已废弃的本地旧根。同批把那批成果迁上云（见下一条）。
+- [ ] 2026-08-09 【ztl-agent-mgmt】**广能发商机成果回迁云端**：`D:\ZTL_Manage\01_商机\S157_广能发老挝EPC项目财税顾问服务_2026.08\`（需求记录/报价函 docx/报价推理/测算报价/服务方案 共 5 件）、`D:\ZTL_Customers\` 下当日新建的 7 份 `_客户信息.md` + `客户清单.csv`、`_meta\db\` 三张表（客户/联系人/商机）当日增量 → 合并进 WorkDrive `20_ZTLMGMT` 对应位置。⚠️ 三张表云端已有 8-09 迁移快照，必须**按行增量合并**，禁整表覆盖。
 - [ ] 2026-08-09 【ztl-symphony】任务包【模型】字段解析：`mp-dispatch.js`/`orchestrator.js` 读 L/M/H → 映射 model id（L=claude-haiku-4-5、M=claude-sonnet-5、H=claude-opus-5）+ effort（low/medium/high）传 `--model/--effort`；无字段沿用现默认；ERROR/UNPARSED 重派自动升一档。
 - [ ] 2026-08-09 【ztl-bps-workspace】mgmt-new-bps-client 建档流程补一步：同步在 ztl-mp `client-aliases.md` 加简称行。
 - [ ] 2026-08-09 【用户】`client-aliases.md` 中 ⚠️ 待确认项补全（LCPI/LCPC/CGN-EL/CGN-TV 全称）；核对 `10_BPS` 下 `HUABAOSHEN_华保盛` 与 `03_HUABAOSHEN_华保盛` 疑似重复目录。
-- [ ] 2026-08-09 【人工】删除 WorkDrive `ZTL-Manage/00_Inbox/` 下的 MCP 写入验证遗留文件 `_MCP验证通过_请删除此文件`（MCP 无删除接口）。
+- [ ] 2026-08-09 【人工】删除 WorkDrive `20_ZTLMGMT/00_Inbox/` 下的 MCP 写入验证遗留文件 `_MCP验证通过_请删除此文件`（MCP 无删除接口）。
 - [ ] 2026-08-09 【ztl-agent-mgmt】`_meta` 资料（含六张表）按需整理修改后移入仓库 git 化，移一批引用切一批。
 - [ ] 2026-08-09 【ztl-bps-workspace】`shared\代账目录标准.md` 代账根注册表加 WorkDrive 云根记号（`wd:10_BPS/...`），并清除 `D:\_BPS\` 旧根条目（已废弃）。
 - [ ] 2026-08-09 【ztl-agent-mgmt】归档类 skill（mgmt-onboard-opportunity / mgmt-archive-project）补「生成档案卡」步骤：一页 md（当事方/金额/期限/关键条款/原件 WorkDrive 指针）存 `_meta\db\` 旁；存量惰性补做。
 - [ ] 2026-08-09 【ztl-symphony】去单机化（**Claude Code 云端会话方案**，用户选定，另开有该仓库权限会话执行）：~~①入口拆除 Telegram 常驻 gateway~~ **①作废——2026-08-09 用户改判保留 Telegram 并继续使用**，Telegram 与 claude.ai App MP Project 并行作为两个派单入口，同写「MP派工单」；②执行改云端会话在目标仓库起会话；③淘汰 orchestrator spawn 里的 `--add-dir Z:\10_BPS` 等盘符参数，数据全走 MCP；④定时任务改 Routines/CronCreate（⚠️ 见下方云端兜底一项：Routines 最小间隔 1 小时且够不到滴答）。
+- [ ] 2026-08-09 【ztl-symphony】**企业微信双向接入**（用户拍板，方案权威见 `docs/企业微信接入方案.md`）：V1=群机器人 webhook 出向通知（`MP_WECOM_WEBHOOK`，完成/卡住/待决策三时点推送）；V2=serverless 回调入向发单（腾讯云 SCF：验签+AES 解密+userid 白名单 → headless MP 定域 → 按 dida-board-contract 建卡 → `symphony:` 续跑）。**待用户人工**：企微建自建应用（AgentId/Secret/CorpId/Token/EncodingAESKey）、开腾讯云账号、V1 先建群机器人拿 webhook URL。
 - [ ] 2026-08-09 【ztl-symphony】Telegram 网关装开机自启：`scripts\gateway.ps1` 目前无 `install-autostart` 子命令（orchestrator.ps1 有）。网关是常驻本地进程，关机即停，Telegram 派单在关机期间无响应。照 orchestrator 的启动文件夹方案补一个即可。
 
-- [ ] 2026-08-09 【MP Project / ztl-symphony】**手机端附件通道**：claude.ai App 的 MP Project 只有连接器（WorkDrive/滴答），无文件系统与 git，用户在手机上传的附件落不进目标仓库（本次《所得税法88号》PDF 即卡在此处，MP Project 只能建卡后停）。方案：MP Project 收到附件先经 WorkDrive MCP 转存约定中转目录（建议 `wd:ZTL-Manage/00_Inbox/_mp转交/`），任务包【参数】写 WorkDrive 指针而非本地路径；执行侧会话按指针取件后落各仓库入口目录（如 laos-compliance-kb 的 `待摄入/`）。中转目录标准写入 `CLOUD-DATA-BLUEPRINT.md`。
+- [ ] 2026-08-09 【MP Project / ztl-symphony】**手机端附件通道**：claude.ai App 的 MP Project 只有连接器（WorkDrive/滴答），无文件系统与 git，用户在手机上传的附件落不进目标仓库（本次《所得税法88号》PDF 即卡在此处，MP Project 只能建卡后停）。方案：MP Project 收到附件先经 WorkDrive MCP 转存约定中转目录（建议 `wd:20_ZTLMGMT/00_Inbox/_mp转交/`），任务包【参数】写 WorkDrive 指针而非本地路径；执行侧会话按指针取件后落各仓库入口目录（如 laos-compliance-kb 的 `待摄入/`）。中转目录标准写入 `CLOUD-DATA-BLUEPRINT.md`。
 - [ ] 2026-08-09 【ztl-symphony / 滴答】**卡片一键转执行会话**：卡片字段规范部分已完成（见 `dida-board-contract.md`：`ws-<代号>` 路由标签 + 任务包描述模板 + 附件 WorkDrive 指针位置）。**剩余**：打通从卡片拉起 claude.ai/code 对应仓库云端会话执行 → 依赖下面的 environment_id 一项。
 - [ ] 2026-08-09 【ztl-mp / 云端】**云端兜底 routine — 2026-08-09 勘察结论：当前建不了，两条硬阻断**。设计本身已就绪（本地侧心跳 + `agent-cloud` 避让均已实现并验证），缺的是云端那一半。
   - ⛔ **阻断 1：轮询间隔**。claude.ai Routines API 最小 cron 间隔为 **1 小时**，`*/10 * * * *` 会被拒。用户要的 10 分钟兜底做不到。
@@ -37,4 +39,4 @@
 
 - [x] 2026-08-08 MP 仓库建仓落盘（章程/注册表/路由表/mp agent/SOP/蓝图）。
 - [x] 2026-08-09 **滴答派单断链修复**：App 侧 MP 建的卡全部卡死无人认领。根因=看板契约从来没被写下来（缺 columnId、缺 `agent-ready`、自造语义标签、描述用【】格式、工作区填 GitHub 仓库名而非白名单代号），外加 `workspaces.content` 指向已弃用的 `D:\ZTL_Content` 导致 content 任务静默跑进 bps 仓库。产出：新建 `dida-board-contract.md`；路由表加代号列；Project 指令补建卡硬规格；symphony 侧 `ws-*` 标签路由 + 拆 Z 盘全局闸 + `recover()` 避让 `agent-cloud` + 在线心跳。
-- [x] 2026-08-09 ZTL_Manage（并入 ZTL_Customers）整体迁 WorkDrive `ZTL-Manage` 并完成云端 MCP 读写验证；routing-table 云覆盖 gate 删除，数据面全云端。
+- [x] 2026-08-09 ZTL_Manage（并入 ZTL_Customers）整体迁 WorkDrive `20_ZTLMGMT` 并完成云端 MCP 读写验证；routing-table 云覆盖 gate 删除，数据面全云端。
