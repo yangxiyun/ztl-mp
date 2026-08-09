@@ -13,6 +13,9 @@
 - [ ] 2026-08-09 【ztl-agent-mgmt】归档类 skill（mgmt-onboard-opportunity / mgmt-archive-project）补「生成档案卡」步骤：一页 md（当事方/金额/期限/关键条款/原件 WorkDrive 指针）存 `_meta\db\` 旁；存量惰性补做。
 - [ ] 2026-08-09 【ztl-symphony】去单机化（**Claude Code 云端会话方案**，用户选定，另开有该仓库权限会话执行）：①入口拆除 Telegram 常驻 gateway（`gateway/`+`scripts/gateway.ps1`），改 claude.ai App 直连 MP 云端会话；②执行改云端会话在目标仓库起会话；③淘汰 orchestrator spawn 里的 `--add-dir Z:\10_BPS` 等盘符参数，数据全走 MCP；④定时任务改 Routines/CronCreate。
 
+- [ ] 2026-08-09 【MP Project / ztl-symphony】**手机端附件通道**：claude.ai App 的 MP Project 只有连接器（WorkDrive/滴答），无文件系统与 git，用户在手机上传的附件落不进目标仓库（本次《所得税法88号》PDF 即卡在此处，MP Project 只能建卡后停）。方案：MP Project 收到附件先经 WorkDrive MCP 转存约定中转目录（建议 `wd:ZTL-Manage/00_Inbox/_mp转交/`），任务包【参数】写 WorkDrive 指针而非本地路径；执行侧会话按指针取件后落各仓库入口目录（如 laos-compliance-kb 的 `待摄入/`）。中转目录标准写入 `CLOUD-DATA-BLUEPRINT.md`。
+- [ ] 2026-08-09 【ztl-symphony / 滴答】**卡片一键转执行会话**：「MP派工单」卡片补字段（工作区代号 + 入口 + 任务包全文 + 附件 WorkDrive 指针），并打通从卡片拉起 claude.ai/code 对应仓库云端会话执行，回报按 AGENT-RETURN v1 写回卡片。补上后手机端可全流程跑通（laos-compliance-kb 仓库自含、无本地盘依赖，是首个可验收场景）。
+- [ ] 2026-08-09 【ztl-mp】MP Project 指令文本补「能力边界」段：明确 App Project 只做识别/定域/落卡+WorkDrive 读写与纯咨询，凡需动 git 仓库/本地文件的执行一律转 Claude Code（本地或 claude.ai/code 云端会话），避免用户误判为故障。
 - [ ] 2026-08-08 注册表〔待补〕项写实：ztl-symphony（CLI/API 调用方式、会话生命周期）、ztl-agent-mgmt（12 skill 清单核对）、ztl-content（目录与 Linear 对接）、lao-law-lib（管道用法与本地路径）——需把对应仓库挂进会话通读。
 - [ ] 2026-08-08 claude.ai 账户级陈旧副本停用（用户手工）：fs-notes-lao、bol-exchange-rate、ztl-content-writing-loop/ztl-linear-content-writing-loop 二留一；wht-processor、journal-cleanup 确认后处置。清单详见 bps 仓库分支 `claude/agent-orchestration-platform-uw5xvv` 的 `_archive\2026-08-MP分层路由改造记录.md`。
 - [x] 2026-08-09 bps 分层路由改造分支**已裁定废弃**（用户删除分支）；改造记录存档 `docs/2026-08-bps分层路由改造记录-存档.md`（含 17 skill 隐藏清单+承接矩阵+账户级停用清单），日后想启用照单重做即可。
