@@ -22,7 +22,7 @@
 - **入口**：管理类=`@mgmt-workflow-router`；报价类=`@pricing-quote-flow`。
 - **例外**：新增代账客户建档（mgmt-new-bps-client）与通用模板填充（doc-template-fill）在 bps 仓库。
 - **12 skill 清单核实（2026-08-09 通读，与描述一致）**：mgmt-* 7个（mgmt-onboard-opportunity/mgmt-convert-to-project/mgmt-archive-project/mgmt-pipeline-review/mgmt-archive-licenses/mgmt-client-insights/mgmt-inbox-triage）+ ztl-pricing-* 4个（ztl-pricing-framework/ztl-pricing-audit/ztl-pricing-bps/ztl-pricing-advisory）+ annual-portfolio-rollover 1个。2 agent 均在 `.claude\agents\`：`mgmt-workflow-router`（管理域路由入口）、`pricing-quote-flow`（报价九步法编排）。
-- **数据依赖**：管理文档数据库 = WorkDrive `ZTL_Manage`（🔄 由 `D:\ZTL_Manage\` 整体迁入进行中，`D:\ZTL_Customers\` 商务客户主档并入其子目录一同上云；上云完成前碰它的任务派回本地）。`_meta\db\` 六张表（客户.md/商机.md/项目.md/合同.md/联系人.md/收款.md，单一事实来源）等 `_meta` 资料按需整理修改后移入本仓库 git 化，移一批引用切一批。其余目录 `00_Inbox`/`01_商机`/`02_合同和结算`/`04_专项工作`/`05_模板` 随整体上云。
+- **数据依赖**：管理文档数据库 = WorkDrive 团队文件夹 `ZTL-Manage`（✅ 2026-08-09 由 `D:\ZTL_Manage\` 整体迁入完成并经 MCP 读写验证；商务客户主档=子目录 `03_customers`，云端会话直接读写）。`_meta\db\` 六张表（客户.md/商机.md/项目.md/合同.md/联系人.md/收款.md，单一事实来源）等 `_meta` 资料按需整理修改后移入本仓库 git 化，移一批引用切一批。其余目录 `00_Inbox`/`01_商机`/`02_合同和结算`/`04_专项工作`/`05_模板` 随整体上云。
 
 ### laos-compliance-kb（Lao-wiki 合规知识库）✅
 - **本地**：`D:\laos-wiki` ｜ **GitHub**：yangxiyun/laos-compliance-kb（公开）

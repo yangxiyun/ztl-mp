@@ -9,7 +9,7 @@
 |---|---|---|
 | 流程/知识/台账（md、代码、注册表、KB） | GitHub 各工作区仓库 | ✅ 已云端 |
 | 代账客户资料、PDF 原件、Excel 底稿 | WorkDrive `10_BPS`（本地 `Z:\10_BPS\` 即 TrueSync 映射视图） | ✅ 已在云端，只需路由改写记号 |
-| 管理文档数据库：`D:\ZTL_Manage\`（含并入的 `D:\ZTL_Customers\` 商务客户主档） | WorkDrive `ZTL_Manage`（`ZTL_Customers` 作其子目录） | 🔄 待整体迁入 |
+| 管理文档数据库：原 `D:\ZTL_Manage\`（含并入的原 `D:\ZTL_Customers\` 商务客户主档） | WorkDrive 团队文件夹 `ZTL-Manage`（客户主档=其子目录 `03_customers`；根含 `_meta`/`00_Inbox`/`01_商机`/`02_合同和结算`/`05_模板`） | ✅ 2026-08-09 迁入完成，云端 MCP 读（列目录/下载）写（建文件/改名）已验证 |
 | `D:\_BPS\`（旧 PBC 文件夹） | ⛔ 废弃（2026-08-09 裁定），不迁移，路由不得指向 | 已从路由/注册表清除 |
 | `D:\ZTL_Manage\_meta\` 中需流程消费的资料 | 按需整理修改后移入 ztl-agent-mgmt 仓库（git 化），移一批引用切一批 | 🔄 按需进行 |
 
@@ -34,7 +34,7 @@
 
 ## 剩余步骤
 
-1. `D:\ZTL_Manage\`（并入 `D:\ZTL_Customers\`）整体迁 WorkDrive `ZTL_Manage`（人工，TrueSync 或网页上传）。
-2. 云端会话跑一单「整理资料」（如 CRCT）验证 zoho-workdrive MCP 读写全流程。
-3. 验证通过后删除 routing-table 云覆盖 gate；bps 仓库 `shared\代账目录标准.md` 加云根记号（记 backlog 交接项）。
+1. ✅ `D:\ZTL_Manage\`（并入 `D:\ZTL_Customers\`）整体迁 WorkDrive `ZTL-Manage`（2026-08-09 完成，936 文件/472 文件夹/1.06 GB）。
+2. ✅ 云端 MCP 读写验证（2026-08-09）：列团队文件夹/列目录/下载解码 CLAUDE.md ✅；`00_Inbox` 下建文件+改名 ✅（遗留测试文件 `_MCP验证通过_请删除此文件`，MCP 无删除接口，请人工删）。
+3. ✅ routing-table 云覆盖 gate 已删除（消歧规则 6 改为「数据面已全云端」）。bps 仓库 `shared\代账目录标准.md` 加云根记号仍在 backlog。
 4. 去单机化收尾：symphony 网关/编排器迁云主机或改 Claude Code remote 会话，淘汰 `--add-dir Z:\10_BPS` 类盘符参数；定时任务走 Routines。

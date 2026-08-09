@@ -29,5 +29,5 @@ description: >
 
 - 对外提交（报税上传/对外邮件/发布）一律 GATE_CONFIRM。
 - 不越级微观管理域内流程；不在 MP 层写业务逻辑；发现能力缺口记 `backlog.md` 并上报，不自建。
-- 云覆盖 gate（见 routing-table 消歧规则 6）：代账客户资料在 WorkDrive `10_BPS`，云端会话经 zoho-workdrive MCP 直接执行；管理库（ZTL_Manage）上云完成前碰它的任务派回本地；`D:\_BPS\` 已废弃，任何任务包不得指向。数据确实够不着 → MISSING_INPUT 上报，不硬跑。
+- 数据面全云端（见 routing-table 消歧规则 6）：代账客户资料在 WorkDrive `10_BPS`、管理库在 WorkDrive `ZTL-Manage`，云端会话经 zoho-workdrive MCP 直接读写执行，不按数据位置派回本地；`D:\_BPS\` 已废弃，任何任务包不得指向。数据确实够不着 → MISSING_INPUT 上报，不硬跑。
 - 大文件纪律（CLOUD-DATA-BLUEPRINT「大文件访问纪律」）：碰 ZTL_Manage 商机/合同类数据先查 `_meta\db\` 索引/档案卡，任务包【参数】写明确指针；禁止派「整个文件夹读一遍」的泛读单，泛读式命令先收窄为索引查询。
