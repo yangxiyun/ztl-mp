@@ -19,7 +19,7 @@
 - 云端统一记号：`wd:10_BPS/<客户>/<年份>/...`、`wd:20_ZTLMGMT/...`（目录结构与 bps `shared\代账目录标准.md` 同构）。
   - ⚠️ 团队文件夹名 = **`20_ZTLMGMT`**（2026-08-09 用户改定；曾用名 `ZTL-Manage`）。⛔ 不要写 `ZTL_Manage`/`ZTL-Manage`——前者是已废弃的本地旧目录名，后者是改名前的旧云端名。
   - **folder id = `dma7m8aa2b79ed2704056ad4b790a4c104532`**（团队 id `fq8duc63b089e3644408fa5568f39cf7f93ed`）。id 不随改名变化，**按 id 定位最稳**；按名搜索的代码在改名窗口期会落空。
-  - 🔄 **云端改名待人工执行**：zoho-workdrive MCP 的 `renameFileOrFolder` 对**团队文件夹**返回 `Unauthorized access`（该接口只覆盖普通文件/文件夹），需在 WorkDrive 网页端手工改。本文档与全部路由已按新名 `20_ZTLMGMT` 写就，改名完成前云端实际仍叫 `ZTL-Manage`。
+  - ✅ **云端改名已完成**（2026-08-09 用户在 WorkDrive 网页端执行，MCP 核实 `name = 20_ZTLMGMT`，943 文件/478 文件夹/1.06 GB）。注：zoho-workdrive MCP 的 `renameFileOrFolder` 对**团队文件夹**返回 `Unauthorized access`（只覆盖普通文件/文件夹），团队文件夹改名只能走网页端——日后再改名照此办。
   - 常用定位：客户主档 `wd:20_ZTLMGMT/03_customers/<客户简称>_<全称>/`；商机 `wd:20_ZTLMGMT/01_商机/<编号>_<名称>_<年.月>/`；六张索引表 `wd:20_ZTLMGMT/_meta/db/`。
 - 本地盘符（Z: 等）只是 TrueSync 兼容视图，**权威在云端**；任何电脑装 TrueSync 即同构。
 - ⛔ `D:\ZTL_Manage\`、`D:\ZTL_Customers\` 不在此列——它们**不是**云端的 TrueSync 视图，而是迁移前的旧副本，已废弃；写进去的东西不会同步到云端，等于丢件。

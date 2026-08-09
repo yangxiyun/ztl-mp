@@ -4,7 +4,6 @@
 
 ## 待办
 
-- [ ] 2026-08-09 【用户手工】**WorkDrive 团队文件夹改名**：`ZTL-Manage` → `20_ZTLMGMT`（folder id `dma7m8aa2b79ed2704056ad4b790a4c104532`）。MCP 做不了——`renameFileOrFolder` 对团队文件夹返回 `Unauthorized access`（只覆盖普通文件/文件夹），须在 WorkDrive 网页端右键重命名。**全部路由文档已按新名写就**，改名前云端实名仍是 `ZTL-Manage`，两者不一致期间按名搜索会落空（按 id 定位不受影响）。
 - [ ] 2026-08-09 【ztl-agent-mgmt】**切引用到 WorkDrive**：11 个文件 37 处硬编码 `D:\ZTL_Manage\` / `D:\ZTL_Customers\`（CLAUDE.md、agents/mgmt-workflow-router、agents/pricing-quote-flow、skills 8 个：mgmt-onboard-opportunity/mgmt-convert-to-project/mgmt-archive-project/mgmt-pipeline-review/mgmt-archive-licenses/mgmt-client-insights/mgmt-inbox-triage/annual-portfolio-rollover）全部改为 `wd:20_ZTLMGMT/...` 记号 + zoho-workdrive MCP 读写。根因：2026-08-09 数据迁云端时**只迁数据没切引用**，当天广能发商机单的全部成果因此落回已废弃的本地旧根。同批把那批成果迁上云（见下一条）。
 - [ ] 2026-08-09 【ztl-agent-mgmt】**广能发商机成果回迁云端**：`D:\ZTL_Manage\01_商机\S157_广能发老挝EPC项目财税顾问服务_2026.08\`（需求记录/报价函 docx/报价推理/测算报价/服务方案 共 5 件）、`D:\ZTL_Customers\` 下当日新建的 7 份 `_客户信息.md` + `客户清单.csv`、`_meta\db\` 三张表（客户/联系人/商机）当日增量 → 合并进 WorkDrive `20_ZTLMGMT` 对应位置。⚠️ 三张表云端已有 8-09 迁移快照，必须**按行增量合并**，禁整表覆盖。
 - [ ] 2026-08-09 【ztl-symphony】任务包【模型】字段解析：`mp-dispatch.js`/`orchestrator.js` 读 L/M/H → 映射 model id（L=claude-haiku-4-5、M=claude-sonnet-5、H=claude-opus-5）+ effort（low/medium/high）传 `--model/--effort`；无字段沿用现默认；ERROR/UNPARSED 重派自动升一档。
@@ -40,3 +39,4 @@
 - [x] 2026-08-08 MP 仓库建仓落盘（章程/注册表/路由表/mp agent/SOP/蓝图）。
 - [x] 2026-08-09 **滴答派单断链修复**：App 侧 MP 建的卡全部卡死无人认领。根因=看板契约从来没被写下来（缺 columnId、缺 `agent-ready`、自造语义标签、描述用【】格式、工作区填 GitHub 仓库名而非白名单代号），外加 `workspaces.content` 指向已弃用的 `D:\ZTL_Content` 导致 content 任务静默跑进 bps 仓库。产出：新建 `dida-board-contract.md`；路由表加代号列；Project 指令补建卡硬规格；symphony 侧 `ws-*` 标签路由 + 拆 Z 盘全局闸 + `recover()` 避让 `agent-cloud` + 在线心跳。
 - [x] 2026-08-09 ZTL_Manage（并入 ZTL_Customers）整体迁 WorkDrive `20_ZTLMGMT` 并完成云端 MCP 读写验证；routing-table 云覆盖 gate 删除，数据面全云端。
+- [x] 2026-08-09 云端根改名 `ZTL-Manage` → `20_ZTLMGMT`（用户网页端执行，MCP 核实生效；团队文件夹改名 MCP 不支持，只能网页端）；MP 侧全部路由文档同步，commit 4d6af69。
