@@ -51,6 +51,7 @@
 
 ### ztl-symphony（执行引擎）🔧
 - **GitHub**：yangxiyun/ztl-symphony
+- **去单机化（2026-08-09 用户选定 Claude Code 云端会话方案）**：数据全上云后，入口改 claude.ai App 直连 MP 云端会话（拆除 Telegram 常驻网关），执行走云端会话在目标仓库起会话、数据全 MCP、淘汰盘符参数；改造项记 backlog。以下描述为改造前的单机形态，逐步迁移中。
 - **角色**：JS 编排器——驱动 Claude Code 会话执行派单：按工作区起独立会话、`--resume` 同 session 续跑省 token、`symphony: 1A 2B` 应答续跑、AGENT-RETURN v1 对齐方（`orchestrator/prompt-builder.js` 的 AGENT_RETURN_SPEC/AUTONOMY_CONTRACT）。
 - **MP 关系**：MP 定域后经 symphony 在目标仓库起执行会话。**2026-08-09 二期落地**：①`gateway/` Telegram 网关（手机发单→headless MP 定域会话→滴答「MP派工单」建卡→事件推送→reply 决策续跑，环境变量 `MP_TG_TOKEN`/`MP_TG_CHAT_ID`）；②编排器事件流 `logs/events.jsonl`；③跨工作区执行（任务描述「工作区：<代号>」+ `cfg.workspaces` 白名单，代号与本表对齐：bps/mgmt/laos-wiki/content/lao-law-lib/mp）。
 - **CLI 调用**：无 bin/npm script，运维走 `scripts\orchestrator.ps1 {start|stop|status|dry-run|check|install-autostart}`（内部为 `node orchestrator\orchestrator.js {run|status|dry-run|check}`）；真正执行体是它 spawn 的 `claude` CLI：`claude -p --output-format json --max-turns N [--model M --effort E] --allowedTools ... [--resume <sessionId>] --strict-mcp-config --add-dir Z:\10_BPS`，prompt 走 stdin（`orchestrator\orchestrator.js`）。

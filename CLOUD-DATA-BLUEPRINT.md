@@ -37,4 +37,4 @@
 1. ✅ `D:\ZTL_Manage\`（并入 `D:\ZTL_Customers\`）整体迁 WorkDrive `ZTL-Manage`（2026-08-09 完成，936 文件/472 文件夹/1.06 GB）。
 2. ✅ 云端 MCP 读写验证（2026-08-09）：列团队文件夹/列目录/下载解码 CLAUDE.md ✅；`00_Inbox` 下建文件+改名 ✅（遗留测试文件 `_MCP验证通过_请删除此文件`，MCP 无删除接口，请人工删）。
 3. ✅ routing-table 云覆盖 gate 已删除（消歧规则 6 改为「数据面已全云端」）。bps 仓库 `shared\代账目录标准.md` 加云根记号仍在 backlog。
-4. 去单机化收尾：symphony 网关/编排器迁云主机或改 Claude Code remote 会话，淘汰 `--add-dir Z:\10_BPS` 类盘符参数；定时任务走 Routines。
+4. 去单机化收尾（**Claude Code 云端会话方案**，2026-08-09 用户选定）：入口改 claude.ai App 直连 MP 云端会话（拆除 Telegram 常驻网关）；执行走云端会话在目标仓库起会话，数据全 MCP，淘汰 `--add-dir Z:\10_BPS` 盘符参数；定时任务走 Routines/CronCreate。symphony 代码改造记 backlog，另会话执行。
