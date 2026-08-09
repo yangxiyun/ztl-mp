@@ -63,7 +63,7 @@
 ### ticktick-mcp（滴答清单 MCP server）🔧
 - 任务看板承载。**2026-08-09 已接通**：看板=symphony 控制平面清单「MP派工单」（四列 Todo/In Progress/In Review/Done + agent-* 标签），单一状态源；ticktick-mcp 供会话侧建卡/查看/管理，编排器侧走 symphony 的 dida-client.js（同一账号同一数据）。
 - **看板字段规范一律以 `dida-board-contract.md` 为准**（project/列 id、封闭标签词汇表、建卡模板、状态机、决策回填、双认领方约定）。2026-08-09 之前该契约不存在，App 侧 MP 建的卡因缺 columnId、缺 `agent-ready`、自造语义标签而全部卡死无人认领——新增或改动看板字段前先读该文件。
-- **认领方两个**：本地 orchestrator 为主（10 秒轮询）；云端 routine 兜底（10 分钟轮询，仅在心跳过期 >3 分钟且卡片静置 ≥15 分钟时接管，接管卡打 `agent-cloud`）。心跳载体=独立清单 `__symphony-heartbeat__`。
+- **认领方**：目前只有本地 orchestrator（10 秒轮询，已装开机自启）。云端 routine 兜底**尚未实现**——Routines API 最小 cron 间隔 1 小时，且 cloud routine 只能挂 claude.ai connector 而滴答未在其中，够不到看板（详见 `backlog.md`）。本地侧那一半已就绪：心跳写入独立清单 `__symphony-heartbeat__`（60s 一次），`recover()` 已避让 `agent-cloud` 标签防双跑。关机期间卡片积压在 Todo 不丢单，开机后自动补跑。
 
 ## ⛔ 弃用名单（2026-08-08 确认，MP 永不派单；建议 GitHub Archive 防混淆）
 
