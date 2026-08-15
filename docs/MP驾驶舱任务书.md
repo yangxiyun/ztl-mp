@@ -1,4 +1,6 @@
-# 任务书：MP 驾驶舱（本地单页派单/监控/决策/统计面板）
+# 任务书：MP 驾驶舱（本地单页派单/监控/决策/统计面板 · WorkBuddy 式）
+
+> 2026-08-09 用户拍板一步到位：基础四功能+面板为 **P0**，下方「P1 三项加码」同分支一次交付。**按 P0 → P1 顺序开发**：P0 是保底可用线，P1 做不完先交 P0。
 
 > 下发方式：在 claude.ai/code 对 **yangxiyun/ztl-symphony** 仓库开云端会话，把本文整段贴给它。
 > 动工前必读 ztl-mp（main）三文件：`dida-board-contract.md`（含新扩展的 `* 类别：` 行与 §3.1 `## 产出` 段）、`routing-table.md`、`docs/MP-Project指令.md`。
@@ -29,6 +31,14 @@
 - 四类别聚合：读 `* 类别：` 行；旧卡兜底映射 content→营销传播｜mgmt→销售前期｜bps/lao-law-lib/laos-wiki→项目执行｜mp→财务人力。每类一色块区，内按状态分组+计数。
 - 「待跟进」置顶：全部 agent-parked 与 agent-error 卡。
 - 风格干净克制，浅色，手机单列堆叠；不引图表库，计数+色块+列表。
+
+## P1 三项加码（WorkBuddy 式体验，P0 完成后做）
+
+1. **执行过程实时日志流**：dashboard 服务 tail orchestrator 的 `logs/events.jsonl`，经 SSE（`GET /api/events`）推前端；每张执行中卡片可展开「执行过程」时间线（认领/会话启动/关键事件/回报）。按 taskId/identifier 关联事件与卡片；events.jsonl 不存在或字段对不上时优雅降级（隐藏时间线，不报错）。
+2. **空间浏览**：`GET /api/files?path=` 直接读本地 TrueSync 映射盘目录树（根白名单：`Z:\10_BPS` 与 ZTL-Manage 的映射路径，配置在 `dashboard/config.json`）；前端左侧「空间」面板可逐级浏览，pdf/图片经 HTTP 内联预览，其余点击下载。⚠️ 严格路径白名单校验防目录穿越（resolve 后必须仍在根内）。卡片 `## 产出` 段的 `wd:` 记号优先解析到此视图打开。
+3. **场景芯片**：输入框上方一排快捷芯片，定义在 `dashboard/scenes.json`（用户可自行增改），预置：整理资料（「整理〈客户〉〈yyyy-mm〉PBC 资料」）/月度做账/月度报税/开票/写公众号文章/报价/查法规——点击把模板句填入输入框，用户改词即发。
+
+**不做**（边界，勿超范围）：Office 文件生成、通用本地文件整理、多模型切换界面、桌面 App 打包——这些已有 skill/会话覆盖。
 
 ## 约束
 
