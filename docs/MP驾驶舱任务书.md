@@ -1,51 +1,59 @@
-# 任务书：MP 驾驶舱（本地单页派单/监控/决策/统计面板 · WorkBuddy 式）
+# 任务书 v2：MP 驾驶舱（编排总线版 · WorkBuddy 式）
 
-> 2026-08-09 用户拍板一步到位：基础四功能+面板为 **P0**，下方「P1 三项加码」同分支一次交付。**按 P0 → P1 顺序开发**：P0 是保底可用线，P1 做不完先交 P0。
-
+> **v2 重大变更（2026-08-09 用户终裁）**：驾驶舱不再是滴答看板的前端视图，而是**编排总线本身**——录入→定域→直接 spawn Claude Code 执行→结果/决策选项回到界面。滴答降为只读镜像。v1（滴答总线版）作废。
 > 下发方式：在 claude.ai/code 对 **yangxiyun/ztl-symphony** 仓库开云端会话，把本文整段贴给它。
-> 动工前必读 ztl-mp（main）三文件：`dida-board-contract.md`（含新扩展的 `* 类别：` 行与 §3.1 `## 产出` 段）、`routing-table.md`、`docs/MP-Project指令.md`。
+> 必读（ztl-mp 仓库 main）：`dida-board-contract.md`（字段语义沿用，总线角色变更见其头部标注）、`routing-table.md`（定域+模型分级）、`client-aliases.md`、`docs/MP-Project指令.md`。
 
-## 用户需求（不删减地覆盖全部）
+## 用户需求（不删减）
 
-一、最基本核心功能（自动派单）：1. 任务录入——一句话写进去，如「整理CRCT2026年7月的PBC资料」；2. 自动派单——经 MP 定域自动派到滴答上。
-二、其他核心功能（滴答上没有的）：1. 任务状态的监控；2. 对决策事项的反馈；3. 生成结果的链接，支持一键直达。
-三、可视化面板：单页展示今天/本周/本月完成的任务、需后续跟进的事项；任务四类别：营销传播、项目销售前期对接、项目执行、财务人力资源管理。
+一、任务录入：一句话写进去（例「整理CRCT2026年7月的PBC资料」）→ 自动经 MP 定域派单执行。
+二、任务状态监控；对决策事项的反馈；生成结果的链接一键直达。
+三、可视化面板：今日/本周/本月完成任务、待跟进事项；四类别=营销传播/项目销售前期/项目执行/财务人力资源。
+四（v2 新增核心）：**编排不经滴答**——直接调 Claude Code 执行，结果与决策选项直接在界面反馈。
 
-## 架构（已拍板）
+## 架构
 
-- 新目录 `dashboard/`：Node 小服务（server.js，监听 `0.0.0.0:8848`，LAN 可达、无公网）+ **单文件前端** `index.html`（原生 HTML/CSS/JS，零构建、零 CDN，响应式，手机浏览器可用）。
-- 尽量零新 npm 依赖（node 内置 http 足够；仓库已有的依赖可复用）。
-- 访问令牌：环境变量 `MP_DASH_TOKEN`，前端首次输入存 localStorage，每个 API 请求携带；未配置则仅允许 localhost。
-- 运维 `scripts/dashboard.ps1 {start|stop|status|install-autostart}`，照抄 orchestrator.ps1 模式。⚠️ 脚本避免中文串或存 UTF-8 BOM（wecom-package.ps1 曾因 UTF-8 无 BOM 中文乱码导致 PowerShell 5.1 解析报错）。
+- `dashboard/`：Node 服务（`0.0.0.0:8848`，LAN，无公网）+ 单文件 `index.html`（原生 JS 零构建零 CDN，响应式）。访问令牌 `MP_DASH_TOKEN`（未配置仅允许 localhost）。运维 `scripts/dashboard.ps1 {start|stop|status|install-autostart}`（⚠️ 脚本用 ASCII 或 UTF-8 BOM，防 PowerShell 5.1 编码坑）。
+- **本地任务库**：`dashboard/tasks.db`（SQLite；若想零依赖用 JSON 文件库+写锁也可）——**任务单一状态源**，字段沿用看板契约语义：id/标题/客户/期间/类别（四选一）/工作区代号/入口/模型档/状态（queued|running|awaiting_decision|review|done|error）/产出列表/sessionId/时间戳。
+- **runner 内核复用**：从 `orchestrator/orchestrator.js` 提炼可复用模块（或直接 require 其函数）：spawn `claude` CLI（`-p --output-format json`、`--model/--effort` 按 L/M/H 映射）、`--resume` 续跑、`return-parser.js` 解析 AGENT-RETURN 六段、**同客户串行互斥、并发槽（5）、重试退避、失败升一档**——这些纪律复用不重写。工作区 cwd 仍按 `cfg.workspaces` 白名单。
+- **MP 定域**：复用 `gateway/mp-dispatch.js` 的 headless 定域逻辑（产出：工作区代号/入口/客户/期间/类别/模型档/任务包文本）。
 
-## 四大功能 → 四个 API
+## API
 
-1. `POST /api/dispatch` {text}：复用 `gateway/mp-dispatch.js` headless MP 定域（与 Telegram 网关同源，ANTHROPIC_API_KEY 走本地环境）→ 按契约建卡（Todo 列 + `agent-ready` + `ws-<代号>`，content 含 `* 类别：` 四选一）→ 返回 {定域结果, 卡片id, 标题}。orchestrator 10 秒内自动认领，驾驶舱不触发执行。
-2. `GET /api/board`：`orchestrator/dida-client.js` 拉「MP派工单」四列卡片（含标签/描述），前端 15 秒轮询，按 排队/执行中/待决策(agent-parked)/待复核/完成 渲染。
-3. `POST /api/decision` {taskId, text}：把 `symphony: <text>` 按契约 §5 追加到卡片 **content 末尾**（⛔ 绝不写评论）；前端在待决策卡下方给输入框，展示卡内【待决策】原文。
-4. 结果直达：解析卡片 `## 产出` 段（契约 §3.1），WorkDrive 链接渲染成可点按钮；无产出段给「打开滴答原卡」兜底。
+1. `POST /api/dispatch` {text}：定域 → 写 tasks.db（queued）→ runner 排队执行 → 返回任务对象。**不建滴答卡驱动执行**。
+2. `GET /api/tasks`：全量任务列表（分状态），前端轮询或经 SSE 增量。
+3. `GET /api/events`：SSE——任务状态变更、执行过程事件（复用/扩展 `logs/events.jsonl` 事件流，按 taskId 关联）实时推前端。
+4. `POST /api/decision` {taskId, answer}：把裁定（如 `1A 2B`）经 `--resume` 喂回该任务会话续跑；状态 awaiting_decision→running。
+5. `GET /api/files?path=`：空间浏览（TrueSync 映射盘白名单：`Z:\10_BPS` 与 ZTL-Manage 映射根，配置在 `dashboard/config.json`；resolve 后必须仍在根内，防目录穿越；pdf/图片内联预览，其余下载）。
 
-## 可视化面板（同页下半屏）
+## 界面（单页）
 
-- 顶部统计：今日/本周/本月完成数（Done 列 + 滴答 completed 查询，dida-client 缺接口就补）。
-- 四类别聚合：读 `* 类别：` 行；旧卡兜底映射 content→营销传播｜mgmt→销售前期｜bps/lao-law-lib/laos-wiki→项目执行｜mp→财务人力。每类一色块区，内按状态分组+计数。
-- 「待跟进」置顶：全部 agent-parked 与 agent-error 卡。
-- 风格干净克制，浅色，手机单列堆叠；不引图表库，计数+色块+列表。
+- **录入区**：输入框 + 场景芯片（`dashboard/scenes.json` 可自定义，预置：整理资料/月度做账/月度报税/开票/写公众号文章/报价/查法规——点击填模板句「整理〈客户〉〈yyyy-mm〉PBC 资料」改词即发）。
+- **任务台**：按状态分组的任务卡（排队/执行中/待决策/待复核/完成/失败）；执行中卡可展开「执行过程」时间线（SSE）；**待决策卡把 AGENT-RETURN【待决策】的回答清单解析成可点选项按钮**（1A/1B 结构），也留自由文本框；完成卡显示产出链接（解析到空间浏览视图或 WorkDrive 链接）一键直达。
+- **面板**（下半屏）：今日/本周/本月完成数（tasks.db 统计，不再依赖滴答 completed API）；四类别色块聚合（读任务的类别字段）；「待跟进」置顶（awaiting_decision + error）。
+- 浅色、克制、手机单列堆叠，不引图表库。
 
-## P1 三项加码（WorkBuddy 式体验，P0 完成后做）
+## 滴答降级为只读镜像
 
-1. **执行过程实时日志流**：dashboard 服务 tail orchestrator 的 `logs/events.jsonl`，经 SSE（`GET /api/events`）推前端；每张执行中卡片可展开「执行过程」时间线（认领/会话启动/关键事件/回报）。按 taskId/identifier 关联事件与卡片；events.jsonl 不存在或字段对不上时优雅降级（隐藏时间线，不报错）。
-2. **空间浏览**：`GET /api/files?path=` 直接读本地 TrueSync 映射盘目录树（根白名单：`Z:\10_BPS` 与 ZTL-Manage 的映射路径，配置在 `dashboard/config.json`）；前端左侧「空间」面板可逐级浏览，pdf/图片经 HTTP 内联预览，其余点击下载。⚠️ 严格路径白名单校验防目录穿越（resolve 后必须仍在根内）。卡片 `## 产出` 段的 `wd:` 记号优先解析到此视图打开。
-3. **场景芯片**：输入框上方一排快捷芯片，定义在 `dashboard/scenes.json`（用户可自行增改），预置：整理资料（「整理〈客户〉〈yyyy-mm〉PBC 资料」）/月度做账/月度报税/开票/写公众号文章/报价/查法规——点击把模板句填入输入框，用户改词即发。
+- 每单创建/状态变更/完成时**异步**同步一张简化卡到滴答（标题+状态前缀+产出链接）；**绝不带 `agent-ready`/`agent-*` 执行标签**（防 orchestrator 老轮询抢跑）——建议直接建到一个新清单「MP镜像」或在原清单用 `mirror` 前缀标题。镜像失败只记日志，不阻塞主流程。
+- orchestrator 的滴答轮询通道**保留不删**：claude.ai App 的 MP Project 仍经滴答建卡派单（异地备用通道），两总线并行，以驾驶舱为主。
 
-**不做**（边界，勿超范围）：Office 文件生成、通用本地文件整理、多模型切换界面、桌面 App 打包——这些已有 skill/会话覆盖。
+## Telegram 切总线
+
+- `gateway/gateway.js` 收消息改为 POST 本机 `http://127.0.0.1:8848/api/dispatch`（驾驶舱未启动时回落老滴答路径并提示）；【待决策】经 Telegram 推送，用户回 `symphony: 1A 2B` 由网关转 `/api/decision`（老习惯兼容）。
+
+## 开发顺序（保底线）
+
+- **P0**：任务库 + runner 复用 + dispatch/tasks/decision 三 API + 任务台界面 + 面板统计 + 滴答镜像。P0 即可用。
+- **P1**：SSE 执行过程时间线、空间浏览、场景芯片、Telegram 切总线。
+- **不做**：Office 生成/通用本地整理/多模型切换界面/桌面 App 打包。
 
 ## 约束
 
-- 不改 orchestrator 认领逻辑与现有网关；驾驶舱是纯外挂（读写滴答 + 调 mp-dispatch）。
-- 凭据全走现有环境变量，代码/文档不出现真实密钥。
-- 云端无法联调真实滴答没关系：逻辑对齐契约 + 写清本地自测步骤，不编造已验证。
-- 交付含 `docs/驾驶舱使用说明.md`：启动命令、手机访问（内网 IP:8848 + 防火墙放行）、MP_DASH_TOKEN 配置、常见排查。
+- 不删不破坏现有 orchestrator/gateway 滴答通道；驾驶舱代码自成一体，公共逻辑以 require 复用为先，确需改动原文件时保持向后兼容。
+- 凭据全走现有环境变量；代码/文档无真实密钥。
+- 云端无法联调本地 claude CLI/滴答没关系：逻辑对齐 + 写清本地自测步骤，不编造已验证。
+- 交付含 `docs/驾驶舱使用说明.md`（启动/手机访问/令牌/排查）。
 
 ## 完成后
 
