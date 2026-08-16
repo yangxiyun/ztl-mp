@@ -29,4 +29,4 @@
 ## 备注
 
 - ⚠️ `10_BPS` 根下另有一个无编号的 `HUABAOSHEN_华保盛` 目录，与 `03_HUABAOSHEN_华保盛` 疑似重复，建议用户核对后删除其一（未确认前 MP 以带编号目录为准）。
-- 商务客户主档（非代账目录）在 WorkDrive `ZTL-Manage/03_customers`，跨项目长期资料查那边。
+- 商务客户主档（非代账目录）在 WorkDrive `20_ZTLMGMT/03_customers`，跨项目长期资料查那边。

@@ -76,7 +76,7 @@
 
 ## 数据访问
 
-- 代账客户资料：WorkDrive `10_BPS`；管理文档库：WorkDrive `ZTL-Manage`（客户主档在其 `03_customers`）。全部走 WorkDrive connector，无本地盘。
+- 代账客户资料：WorkDrive `10_BPS`；管理文档库：WorkDrive `20_ZTLMGMT`（客户主档在其 `03_customers`）。全部走 WorkDrive connector，无本地盘。
 - 大文件纪律：先查索引/档案卡，只按需取命中的那一份原件，禁止整文件夹泛读。
 - 财务数据查 Zoho Books connector。
 

@@ -60,7 +60,7 @@
 3. **"客户资料"**：代账客户的 PBC → bps；商机/合同类资料 → mgmt。
 4. **"报价" vs "开票"**：报价（未成交）→ mgmt；开票/应收（已成交）→ bps @ztl-ar。
 5. **"复核/把关"不带对象** → 先问对象；带对象按 qc 三 agent 分域。
-6. **数据面已全云端**（原「数据位置/云覆盖 gate」，2026-08-09 迁移完成并经 MCP 读写验证后删除）：代账客户资料在 WorkDrive `10_BPS`、管理库在 WorkDrive `ZTL-Manage`（含 `03_customers` 客户主档），云端会话直接经 zoho-workdrive MCP 读写执行，本地盘符只是 TrueSync 视图，不再按数据位置派回本地。⛔ `D:\_BPS\` 旧 PBC 文件夹已废弃，任何路由/任务包不得指向。云端目录标准见 `CLOUD-DATA-BLUEPRINT.md`；碰商机/合同大文件遵其「大文件访问纪律」（索引先行、原件按需、摘要沉淀，禁泛读派单）。
+6. **数据面已全云端**（原「数据位置/云覆盖 gate」，2026-08-09 迁移完成并经 MCP 读写验证后删除）：代账客户资料在 WorkDrive `10_BPS`、管理库在 WorkDrive `20_ZTLMGMT`（含 `03_customers` 客户主档），云端会话直接经 zoho-workdrive MCP 读写执行，本地盘符只是 TrueSync 视图，不再按数据位置派回本地。⛔ `D:\_BPS\`（旧 PBC）、`D:\ZTL_Manage\`、`D:\ZTL_Customers\`（管理库与客户主档的迁移前旧副本，2026-08-09 一并废弃）任何路由/任务包不得指向；管理库记号一律 `wd:20_ZTLMGMT/...`（2026-08-09 用户改定的团队文件夹名，曾用名 ZTL-Manage），客户主档 = `wd:20_ZTLMGMT/03_customers/`。云端目录标准见 `CLOUD-DATA-BLUEPRINT.md`；碰商机/合同大文件遵其「大文件访问纪律」（索引先行、原件按需、摘要沉淀，禁泛读派单）。
 
 ## 直连白名单（简单任务禁扇出，token 纪律）
 
