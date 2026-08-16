@@ -1,6 +1,8 @@
 {
   "bps": "D:\\ztl-agent-v2",
   "mgmt": "D:\\ztl-agent-mgmt",
-  "laowiki": "D:\\laos-wiki",
-  "content": "D:\\ZTL_Content"
+  "laos-wiki": "D:\\laos-wiki",
+  "content": "D:\\ztl-content",
+  "lao-law-lib": "D:\\ztl-lao-law-lib",
+  "mp": "D:\\ztl-mp"
 }

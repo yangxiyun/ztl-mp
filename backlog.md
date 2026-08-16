@@ -15,7 +15,7 @@
 - [ ] 2026-08-09 【ztl-symphony】**MP 驾驶舱**（用户拍板，规格随 spawn 会话任务书）：本地单页网页 `dashboard/`（Node 服务 0.0.0.0:8848 + 单文件 index.html），四功能=一句话录入自动派单（复用 mp-dispatch）/看板状态监控/待决策回填（symphony: 协议）/产出链接直达（卡片 `## 产出` 段），下半屏四类别统计面板（营销传播/销售前期/项目执行/财务人力，今日/本周/本月）。契约扩展（类别行+产出段）已入 `dida-board-contract.md` §3/§3.1。
 - [ ] 2026-08-09 【ztl-symphony】**企业微信 V1 出向通知**（方案见 `docs/企业微信接入方案.md`）：群机器人 webhook（`MP_WECOM_WEBHOOK`），orchestrator 事件流完成/卡住/待决策三时点推送，消息遵守汇报纪律。代码在 `feat/wecom-gateway` 分支（V2 部分保留备查但不部署）。**待用户人工**：企微建群→加群机器人→拿 webhook URL 交 symphony 配 `MP_WECOM_WEBHOOK`。
 - [x] 2026-08-09 ⛔ **企微 V2 入向发单放弃**（部署实测裁定）：企微接收消息回调强制大陆 ICP 备案+主体匹配域名，致同老挝无法满足（`tencentscf.com` 域名核验失败）。发单入口保持 Telegram + claude.ai App 两条。为 V2 建的腾讯云函数 `wecom` 可删除。
-- [ ] 2026-08-09 【ztl-symphony】Telegram 网关装开机自启：`scripts\gateway.ps1` 目前无 `install-autostart` 子命令（orchestrator.ps1 有）。网关是常驻本地进程，关机即停，Telegram 派单在关机期间无响应。照 orchestrator 的启动文件夹方案补一个即可。
+- [ ] 2026-08-09 【ztl-symphony】Telegram 网关装开机自启：`scripts\gateway.ps1` 目前无 `install-autostart` 子命令（orchestrator.ps1 有）。网关是常驻本地进程，关机即停，Telegram 派单在关机期间无响应。照 orchestrator 的启动文件夹方案补一个即可。（2026-08-16 用户裁定办公室主机为唯一执行机、常开承接所有转发任务，该机重启后网关断链风险随之上升，优先级提高。）
 
 - [ ] 2026-08-09 【MP Project / ztl-symphony】**手机端附件通道**：claude.ai App 的 MP Project 只有连接器（WorkDrive/滴答），无文件系统与 git，用户在手机上传的附件落不进目标仓库（本次《所得税法88号》PDF 即卡在此处，MP Project 只能建卡后停）。方案：MP Project 收到附件先经 WorkDrive MCP 转存约定中转目录（建议 `wd:ZTL-Manage/00_Inbox/_mp转交/`），任务包【参数】写 WorkDrive 指针而非本地路径；执行侧会话按指针取件后落各仓库入口目录（如 laos-compliance-kb 的 `待摄入/`）。中转目录标准写入 `CLOUD-DATA-BLUEPRINT.md`。
 - [ ] 2026-08-09 【ztl-symphony / 滴答】**卡片一键转执行会话**：卡片字段规范部分已完成（见 `dida-board-contract.md`：`ws-<代号>` 路由标签 + 任务包描述模板 + 附件 WorkDrive 指针位置）。**剩余**：打通从卡片拉起 claude.ai/code 对应仓库云端会话执行 → 依赖下面的 environment_id 一项。
